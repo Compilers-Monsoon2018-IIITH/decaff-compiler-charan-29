@@ -1,0 +1,33 @@
+class Program
+{
+	void main()
+	{
+		//declarations
+		int sum=0;
+		int[100] vec1;
+		int[100] vec2;
+		int[100] vecsum;
+
+		//initializing vectors
+		int  i;
+		for i=0,99
+		{
+			vec1[i]=i*2;
+			vec2[i]=i+2;
+		}
+
+		//adding element-wise
+		int  j;
+		for j=0,99
+		{
+			vecsum[j]=vec1[j]+vec2[j];
+		}
+
+		//printing answer
+		int  k;
+		for k=0,99
+		{
+			callout(vecsum[k]);
+		}
+	}
+}

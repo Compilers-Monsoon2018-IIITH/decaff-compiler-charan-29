@@ -1,0 +1,25 @@
+class Program
+{
+	void main()
+	{
+		int sum=0;
+		int[100] ar;
+
+		int i;
+		//initializing array
+		for i=0,99
+		{
+			ar[i]=i*2;
+		}
+
+		//adding elements of array
+		int j;
+		for j=0,99
+		{
+			sum+=ar[i];
+		}
+
+		//printing results
+		callout(sum);
+	}
+}

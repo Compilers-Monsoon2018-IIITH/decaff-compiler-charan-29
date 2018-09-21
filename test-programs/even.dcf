@@ -1,0 +1,28 @@
+class Program
+{
+	void main()
+	{
+		int sum=0;
+		int[100] ar;
+		int q = 50;
+
+		//initializing array
+		int i;
+		for i=0,99
+		{
+			ar[i]=i*2;
+		}
+
+		//even finding in elements of array
+		int j;
+		for j=0,99
+		{
+			if(ar[j]%2==0)
+			{
+				callout(" ~ ",ar[j]," ~ ");
+				break;
+			}
+		}
+
+	}
+}

@@ -1,1 +1,2 @@
-decaff-compiler-charan-29
+# decaff compiler
+A compiler for a toy language "decaf"

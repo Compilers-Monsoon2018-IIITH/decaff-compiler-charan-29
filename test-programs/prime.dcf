@@ -1,0 +1,30 @@
+class Program
+{
+	void main()
+	{
+		int pr = 541;
+		bool result;
+		int i;
+		for i=2,pr-1
+		{
+			if(pr==2)
+			{
+				callout("prime");
+				result = true;
+				break;
+			}
+			if(pr%i==0) //found an element that divides pr
+			{
+				callout("not prime");
+				result = false;
+				break;
+			}
+		}
+
+		if(result)
+		{
+			callout("prime");
+		}
+
+	}
+}
