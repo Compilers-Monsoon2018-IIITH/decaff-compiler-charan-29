@@ -2,24 +2,28 @@ class Program
 {
 	void main()
 	{
-		int sum=0;
-		int[100] ar;
-		int q = 50;
+
+		callout("print","Size of array: ");
+		int n=read();
+		int[n] ar;
+
+		callout("print","Query number to search for: ");
+		int q = read();
 
 		//initializing array
 		int i;
-		for i=0,99
+		for i=0,n
 		{
-			ar[i]=i*2;
+			ar[i]=read();
 		}
 
 		//adding elements of array
 		int j;
-		for j=0,99
+		for j=0,n
 		{
 			if(ar[j]==q)
 			{
-				callout("found",q);
+				callout("print","found",q);
 				break;
 			}
 		}

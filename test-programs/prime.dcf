@@ -2,20 +2,23 @@ class Program
 {
 	void main()
 	{
-		int pr = 541;
+		int n;
+		callout("print","Enter a number: ");
+		n=read();
+
 		bool result;
 		int i;
 		for i=2,pr-1
 		{
 			if(pr==2)
 			{
-				callout("prime");
+				callout("print","prime");
 				result = true;
 				break;
 			}
 			if(pr%i==0) //found an element that divides pr
 			{
-				callout("not prime");
+				callout("print","not prime");
 				result = false;
 				break;
 			}
@@ -23,7 +26,7 @@ class Program
 
 		if(result)
 		{
-			callout("prime");
+			callout("print","prime");
 		}
 
 	}

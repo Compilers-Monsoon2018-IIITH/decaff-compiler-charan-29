@@ -3,23 +3,27 @@ class Program
 	void main()
 	{
 		int sum=0;
-		int[100] ar;
+		int n;
+		callout("print","Size of array: ");
+		n=read();
+		int[n] ar;
 
 		int i;
 		//initializing array
-		for i=0,99
+		callout("print","Enter elements of array: ");
+		for i=0,n
 		{
-			ar[i]=i*2;
+			ar[i]= read();
 		}
 
 		//adding elements of array
 		int j;
-		for j=0,99
+		for j=0,n
 		{
 			sum+=ar[i];
 		}
 
 		//printing results
-		callout(sum);
+		callout("print",sum);
 	}
 }

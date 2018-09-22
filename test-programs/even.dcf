@@ -3,23 +3,29 @@ class Program
 	void main()
 	{
 		int sum=0;
-		int[100] ar;
-		int q = 50;
+
+		callout("print","Size of array: ");
+		int n=read();
+		int[n] ar;
+
+
 
 		//initializing array
 		int i;
-		for i=0,99
+		callout("print","Enter elements of array: ");
+		for i=0,n
 		{
-			ar[i]=i*2;
+			ar[i]= read();
 		}
+
 
 		//even finding in elements of array
 		int j;
-		for j=0,99
+		for j=0,n
 		{
 			if(ar[j]%2==0)
 			{
-				callout(" ~ ",ar[j]," ~ ");
+				callout("print",ar[j]);
 				break;
 			}
 		}
