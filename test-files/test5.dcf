@@ -1,0 +1,12 @@
+class Program{
+	
+	int a[100];
+
+	void main()
+	{
+		int i;
+		a = a+b;
+		foo(blah(),a%f);
+	}
+
+}

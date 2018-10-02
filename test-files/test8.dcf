@@ -1,0 +1,17 @@
+class Program{
+	
+	int a[100];
+
+	void main()
+	{
+		
+		for i = 1,14
+		{
+			int i,k,l;
+			// int a[100]; remove this comment and check
+			foo();
+		}
+
+	}
+
+}

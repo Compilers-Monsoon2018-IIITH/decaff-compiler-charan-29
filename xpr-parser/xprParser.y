@@ -69,12 +69,6 @@ classBegin	:	CLASS PROGRAM '{' '}'
 			|	CLASS PROGRAM '{' fieldDec '}'
 			;
 
-// fieldDec	:	type ID ';' 
-// 			|	type ID ',' 
-// 			|	type ID '[' intlit ']' ';'
-// 			|	type ID '[' intlit ']' ',' fieldDec
-// 			;
-
 fieldDec	:	type fieldArgs ';'
 			|	fieldDec type fieldArgs ';' 
 			;
@@ -86,10 +80,10 @@ fieldArgs	:	ID ',' fieldArgs
 			;
 
 
-methodDecList	:	type ID '(' methodArgs ')' block 	{printf("hereeeee1\n");}
-			|	type ID '('  ')' block	{printf("hereeeee2\n");}
-			| 	VOID ID '(' methodArgs ')' block	{printf("hereeeee3\n");}
-			|	VOID ID '('  ')' block	{printf("hereeeee4\n");}
+methodDecList	:	type ID '(' methodArgs ')' block 	
+			|	type ID '('  ')' block	
+			| 	VOID ID '(' methodArgs ')' block	
+			|	VOID ID '('  ')' block	
 
 methodDec 	:	methodDecList
 			|	methodDec methodDecList
@@ -113,7 +107,7 @@ vars		:	vars ',' ID
 			|	ID 							
 			;
 
-statementContents	:	location '=' expr ';' {printf("yo man\n");}
+statementContents	:	location '=' expr ';'
 					|	location PLUSEQ expr ';'
 					|	location MINUSEQ expr ';'
 					|	methodcall ';'
@@ -137,25 +131,25 @@ type	:	INT
 		;
 
 //expression
-expr	:	location 		{printf("expr location\n");}
-		|	methodcall 		{printf("expr methodcall\n");}
-		|	literal 		{printf("expr literal\n");}
-		|	'-' expr 		{printf("expr '-' expr\n");}
-		| 	'!' expr 		{printf("expr '!' expr\n");}
-		|	expr '*' expr 	{printf("expr plus\n");}
-		|	expr '/' expr 	{printf("expr plus\n");}
-		|	expr '%' expr 	{printf("expr plus\n");}
-		|	expr '+' expr 	{printf("expr plus\n");}
-		|	expr '-' expr 	{printf("expr plus\n");}
-		|	expr '<' expr 	{printf("expr plus\n");}
-		|	expr '>' expr 	{printf("expr plus\n");}
-		|	expr LE expr 	{printf("expr plus\n");}
-		|	expr GE expr 	{printf("expr plus\n");}
-		|	expr EE expr 	{printf("expr plus\n");}
-		|	expr NE expr 	{printf("expr plus\n");}
-		|	expr AND expr 	{printf("expr plus\n");}
-		|	expr OR expr 	{printf("expr plus\n");}
-		|	'(' expr ')'	{printf("bal parans\n");}
+expr	:	location 		
+		|	methodcall 		
+		|	literal 		
+		|	'-' expr 		
+		| 	'!' expr 		
+		|	expr '*' expr 	
+		|	expr '/' expr 	
+		|	expr '%' expr 	
+		|	expr '+' expr 	
+		|	expr '-' expr 	
+		|	expr '<' expr 	
+		|	expr '>' expr 	
+		|	expr LE expr 	
+		|	expr GE expr 	
+		|	expr EE expr 	
+		|	expr NE expr 	
+		|	expr AND expr 	
+		|	expr OR expr 	
+		|	'(' expr ')'	
 		;
 
 //location means identifier

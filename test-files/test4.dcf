@@ -1,0 +1,19 @@
+class Program{
+	void main()
+	{
+		// gives syntax error
+		int k,ld, lds; int l,d,ld,ad;
+		foo();
+		blahh(); thisone();
+	}
+
+	// another method call
+
+	void foo()// there are comments that should be ignored
+	{//blah blah comments....
+		blah();
+	
+	}
+
+
+}

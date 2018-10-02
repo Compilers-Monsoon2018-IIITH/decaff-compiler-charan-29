@@ -1,0 +1,31 @@
+class Program{
+	
+	int a[100];
+
+	boolean main()
+	{
+		
+		for i = 1,14
+		{
+			int i,k,l;
+			if(x>2)
+			{
+				sthe();
+				
+			}
+			else
+			{
+
+				continue;
+				{
+				
+				}
+				//should give error.
+				return (a+b)
+			}
+			foo();
+		}
+
+	}
+
+}

@@ -1,0 +1,21 @@
+class Program{
+	
+	int a[100];
+
+	void main()
+	{
+		
+		for i = 1,14
+		{
+			int i,k,l;
+			if(x>2)
+			{
+				sthe();
+				
+			}
+			foo();
+		}
+
+	}
+
+}
