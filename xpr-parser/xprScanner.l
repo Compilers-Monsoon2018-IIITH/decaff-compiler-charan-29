@@ -3,12 +3,23 @@
 
 %{
 #include "xprParser.tab.h"
+int comment();
+int yyerror(char *s);
 %}
-
 /*boolean break callout class continue else false for if int return true void*/
+/* to be escaped characters .^$*+?()[{\|-]    
+
+	[ \t\r\n]+  	{	/*eat up white space } 
+*/
+
+
+
+%option yylineno
 
 %%
 
+"/*"			{ comment(); }
+"//".*\n 		{}
 
 "boolean"		{ return BOOLEAN; 	}
 "break"			{ return BREAK; 	}
@@ -23,61 +34,71 @@
 "return"		{ return RETURN;	}
 "true"			{ return TRUE;		}
 "void"			{ return VOID;		}
+"Program"		{return PROGRAM;	}
 
-[ \t]			{ /* ignore whitespace */ }
-\n				{ return EOL; 		}
-"//"			{return COMMENT;	}
+"+"		{return '+';}
+"-"		{return '-';}
+"*"		{return '*';}
+"/"		{return '/';}
+"%"		{return '%';}
 
-
-
-
-"+"	{return ADD;}
-"-"	{return SUB;}
-"*"	{return MUL;}
-"/"	{return DIV;}
-"%"	{return MOD;}
-
-"<"	{return LT;}
-">"	{return GT;}
+"<"		{return '<';}
+">"		{return '>';}
+"="		{return '=';}
 "<="	{return LE;}
 ">="	{return GE;}
 
 "=="	{return EE;}
 "!="	{return NE;}
 
+"!"		{return '!';}
 "&&"	{return AND;}
 "||"	{return OR;}
-"!"		{return NOT;}
+
+"+="	{return PLUSEQ;}
+"-="	{return MINUSEQ;}
+
+"("		{return '(';}
+")"		{return ')';}
+"{"		{return '{';}
+"}"		{return '}';}
+"["		{return '[';}
+"]"		{return ']';}
+","		{return ',';}
+";"		{return ';';}
 
 
-[a-zA-Z0-9]\{1\} {return ALNUM;}
-[a-zA-Z]\{1\} {return ALPHA;} 
-[0-9]\{1\} {return DIGIT;}
-([[0-9][a-fA-F]])\{1\} {return HEXDGT;}
+[0-9][0-9]* 					{return DECLIT;}
+"0x"[0-9a-fA-F][0-9a-fA-F]*		{return HEXLIT;}
+[a-zA-Z_][a-zA-Z0-9_]* 			{return ID;}
 
 
-"("		{return OPENCIRC;}
-")"		{return CLOSECIRC;}
-"{"		{return OPENFLWR;}
-"}"		{return CLOSEFLWR;}
-"["		{return OPENSQR;}
-"]"		{return CLOSESQR;}
-","		{return COMMA;}
+[ \t\v\n\f]+						{}
 
-
-[0-9]([0-9]*) {return DECLIT;}
-0x([[0-9][a-fA-F]])([[0-9][a-fA-F]])*	{return HEXLIT;}
-
-('[\x20-\x7E]{-}['|"|\\|\\"|\\'|\\\\|\\t|\\n]')\{1\} {return CHARLIT;}
-("[\x20-\x7E]{-}['|"|\\|\\"|\\'|\\\\|\\t|\\n]*")\{1\} {return STRINGLIT;}
-
-
-[a-zA-Z]\{1\}([a-zA-Z0-9]*) {return ID;}
-
-
-
-
+.								{printf( "Unrecognized character: %s\n", yytext );}
 %%
 
 
+int comment()
+{
+	char c, c1;
 
+loop:
+	while ((c = input()) != '*' && c != 0)
+		putchar(c);
+
+	if ((c1 = input()) != '/' && c != 0)
+	{
+		unput(c1);
+		goto loop;
+	}
+
+	if (c != 0)
+		putchar(c1);
+}
+
+
+int yyerror(char *s)
+{
+	fprintf(stderr, "error: %s @ line %d\n", s, yylineno);
+}

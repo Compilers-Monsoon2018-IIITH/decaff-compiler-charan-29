@@ -1,6 +1,12 @@
 %{
 	#include <stdio.h>
+	int yylex();
+int yyerror(char *s);
+	extern FILE *yyin;
+
+	
 %}
+
 
 %token	BOOLEAN
 %token	BREAK
@@ -16,91 +22,160 @@
 %token	TRUE
 %token	VOID
 %token	EOL
-%token	COMMENT
-%token	ADD
-%token	SUB
-%token	MUL
-%token	DIV
-%token	MOD
-%token	LT
-%token	GT
-%token	LE
-%token	GE
-%token	EE
-%token	NE
-%token	AND
-%token	OR
-%token	ALNUM
-%token	ALPHA
-%token	DIGIT
-%token	HEXDGT
+%token	PROGRAM
+
+%right '=' PLUSEQ MINUSEQ
+%left	AND OR
+
+%left	EE NE
+
+%left	'<' '>' LE GE
+	
+%left	'+' '-' 
+%left	'*' '/' '%'
+%nonassoc '!'
+
+	
+
+
+
 %token	DECLIT
 %token	HEXLIT
-%token	STRINGLIT
-%token	CHARLIT
 %token	ID
-%token	NOT
-%token 	OPENCIRC
-%token 	CLOSECIRC
-%token	OPENSQR 
-%token	CLOSESQR
-%token	OPENFLWR 
-%token	CLOSEFLWR
-%token COMMA
+%token	'!'
+%token 	'('
+%token 	')'
+%token	'[' 
+%token	']'
+%token	'{' 
+%token	'}'
+%token  ','
+%token	';'
+
+
+// 
 
 %%
 
+
 //start symbol
 start	:	
-		|	start expr EOL
+		|	start classBegin
+		;
+
+classBegin	:	CLASS PROGRAM '{' '}'
+			|	CLASS PROGRAM '{' fieldDec methodDec '}'
+			|	CLASS PROGRAM '{' methodDec '}'
+			|	CLASS PROGRAM '{' fieldDec '}'
+			;
+
+// fieldDec	:	type ID ';' 
+// 			|	type ID ',' 
+// 			|	type ID '[' intlit ']' ';'
+// 			|	type ID '[' intlit ']' ',' fieldDec
+// 			;
+
+fieldDec	:	type fieldArgs ';'
+			|	fieldDec type fieldArgs ';' 
+			;
+
+fieldArgs	:	ID ',' fieldArgs
+			|	ID
+			|	ID '[' intlit ']' ',' fieldArgs
+			|	ID '[' intlit ']'
+			;
+
+
+methodDecList	:	type ID '(' methodArgs ')' block 	{printf("hereeeee1\n");}
+			|	type ID '('  ')' block	{printf("hereeeee2\n");}
+			| 	VOID ID '(' methodArgs ')' block	{printf("hereeeee3\n");}
+			|	VOID ID '('  ')' block	{printf("hereeeee4\n");}
+
+methodDec 	:	methodDecList
+			|	methodDec methodDecList
+			;
+
+methodArgs	:	type ID
+			|	type ID ',' methodArgs
+			;
+
+block		:	'{'  '}'
+			|	'{' varDecl  '}'
+			|	'{' statement '}'
+			|	'{' varDecl statement '}'
+			;
+
+varDecl		:	type vars ';' varDecl
+			|	type vars ';'
+			;
+
+vars		:	vars ',' ID		
+			|	ID 							
+			;
+
+statementContents	:	location '=' expr ';' {printf("yo man\n");}
+					|	location PLUSEQ expr ';'
+					|	location MINUSEQ expr ';'
+					|	methodcall ';'
+					|	IF '(' expr ')' block 
+					|   IF '(' expr ')' block ELSE block
+					|	FOR ID '=' expr ',' expr block
+					|	RETURN ';'
+					| 	RETURN expr ';'
+					| 	BREAK ';'
+					| 	CONTINUE ';'
+					| 	block
+					;
+
+statement 	:	statementContents
+			|	statement statementContents
+			;
+
+
+type	:	INT
+		|	BOOLEAN
 		;
 
 //expression
-expr	:	location
-		|	methodcall
-		|	literal
-		|	expr binop expr
-		|	SUB expr
-		| 	NOT expr
-		|	OPENCIRC expr CLOSECIRC
+expr	:	location 		{printf("expr location\n");}
+		|	methodcall 		{printf("expr methodcall\n");}
+		|	literal 		{printf("expr literal\n");}
+		|	'-' expr 		{printf("expr '-' expr\n");}
+		| 	'!' expr 		{printf("expr '!' expr\n");}
+		|	expr '*' expr 	{printf("expr plus\n");}
+		|	expr '/' expr 	{printf("expr plus\n");}
+		|	expr '%' expr 	{printf("expr plus\n");}
+		|	expr '+' expr 	{printf("expr plus\n");}
+		|	expr '-' expr 	{printf("expr plus\n");}
+		|	expr '<' expr 	{printf("expr plus\n");}
+		|	expr '>' expr 	{printf("expr plus\n");}
+		|	expr LE expr 	{printf("expr plus\n");}
+		|	expr GE expr 	{printf("expr plus\n");}
+		|	expr EE expr 	{printf("expr plus\n");}
+		|	expr NE expr 	{printf("expr plus\n");}
+		|	expr AND expr 	{printf("expr plus\n");}
+		|	expr OR expr 	{printf("expr plus\n");}
+		|	'(' expr ')'	{printf("bal parans\n");}
 		;
 
 //location means identifier
-
 location	:	ID
-			|	ID OPENSQR expr CLOSESQR
+			|	ID '[' expr ']'
 			;
 
 //method call
-
 methodname	:	ID
 			;
 
-methodcall	:	methodname OPENCIRC CLOSECIRC
-			|	methodname OPENCIRC arguments CLOSECIRC
-			|	methodname OPENCIRC STRINGLIT CLOSECIRC
-			|	methodname OPENCIRC STRINGLIT calloutarguments CLOSECIRC
+methodcall	:	methodname '(' ')'
+			|	methodname '(' arguments ')'
 			;
 
 arguments	:	expr
-			|	expr COMMA arguments
+			|	expr ',' arguments
 			;
-
-
-calloutarguments	:	COMMA expr
-					|	COMMA STRINGLIT
-					|	COMMA multiexpr
-					;
-
-multiexpr	:	expr COMMA multiexpr
-			|	STRINGLIT COMMA multiexpr
-			|	expr
-			|	STRINGLIT
-			;
-
 
 literal		:	intlit
-			|	CHARLIT
 			| 	boollit
 			;
 
@@ -112,43 +187,34 @@ boollit		:	TRUE
 			|	FALSE
 			;
 
-binop		:	arithop
-			|	relop
-			|	equiop
-			|	condop
-			;
-
-arithop		:	ADD
-			|	SUB
-			|	MUL
-			|	DIV
-			|	MOD
-			;
-
-relop		:	LT		
-			|	GT
-			|	LE
-			|	GE
-			;
-
-equiop		:	EE
-			|	NE
-			;
-
-condop		:	AND
-			|	OR
-			;	
-
 %%
 
 int main(int argc, char **argv)
 {
+	// open a file handle to a particular file:
+
+	FILE *myfile = fopen("test.dcf", "r");
+	// make sure it's valid:
+	if (!myfile) {
+		printf("I can't open the file!\n");
+		return -1;
+	}
+	// set lex to read from it instead of defaulting to STDIN:
+	yyin = myfile;
+	
+
 	yyparse();
 	return 0;
 }
 
 
-yyerror(char *s)
-{
-	fprintf(stderr, "error: %s\n", s);
-}
+// int yyerror(char *s)
+// {
+// 	fprintf(stderr, "error: %s @ line %d\n", s, yylineno);
+// }
+
+
+
+
+//callout (string lit)
+//comments
