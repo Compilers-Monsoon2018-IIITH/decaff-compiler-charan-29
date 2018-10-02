@@ -3,7 +3,7 @@
 	int yylex();
 int yyerror(char *s);
 	extern FILE *yyin;
-
+	#define YYDEBUG 1
 	
 %}
 
@@ -38,7 +38,7 @@ int yyerror(char *s);
 	
 
 
-
+%token 	STRINGLIT
 %token	DECLIT
 %token	HEXLIT
 %token	ID
@@ -99,8 +99,8 @@ block		:	'{'  '}'
 			|	'{' varDecl statement '}'
 			;
 
-varDecl		:	type vars ';' varDecl
-			|	type vars ';'
+varDecl		:	type vars ';' varDecl {printf("<<<vcc1\n");}
+			|	type vars ';' {printf("<<<vcc2\n");}
 			;
 
 vars		:	vars ',' ID		
@@ -110,7 +110,7 @@ vars		:	vars ',' ID
 statementContents	:	location '=' expr ';'
 					|	location PLUSEQ expr ';'
 					|	location MINUSEQ expr ';'
-					|	methodcall ';'
+					|	methodcall ';' {printf("<<<mcc\n");}
 					|	IF '(' expr ')' block 
 					|   IF '(' expr ')' block ELSE block
 					|	FOR ID '=' expr ',' expr block
@@ -163,8 +163,17 @@ methodname	:	ID
 
 methodcall	:	methodname '(' ')'
 			|	methodname '(' arguments ')'
+			|	CALLOUT '(' stringLiteral ')' {printf("<<<<<<<1\n");}
+			| 	CALLOUT '(' stringLiteral ',' calloutArgsList ')' {printf("<<<<<<<2\n");}
 			;
 
+calloutArgsList	:	expr {printf("<<<<<<<3\n");}
+			|	stringLiteral {printf("<<<<<<<4\n");}
+			|	expr ',' calloutArgsList {printf("<<<<<<<5\n");}
+			|	stringLiteral ',' calloutArgsList {printf("<<<<<<<6\n");}
+			;
+
+stringLiteral 	:	STRINGLIT
 arguments	:	expr
 			|	expr ',' arguments
 			;

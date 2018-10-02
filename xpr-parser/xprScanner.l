@@ -73,8 +73,10 @@ int yyerror(char *s);
 "0x"[0-9a-fA-F][0-9a-fA-F]*		{return HEXLIT;}
 [a-zA-Z_][a-zA-Z0-9_]* 			{return ID;}
 
+[a-zA-Z_]?\"(\\.|[^\\"])*\"		{return STRINGLIT;}
 
-[ \t\v\n\f]+						{}
+
+[ \t\v\n\f]+					{}
 
 .								{printf( "Unrecognized character: %s\n", yytext );}
 %%
