@@ -1,0 +1,7 @@
+class Program{
+	void main()
+	{
+		int k,ld, lds; int l,d,ld,ad;
+		foo();
+	}
+}

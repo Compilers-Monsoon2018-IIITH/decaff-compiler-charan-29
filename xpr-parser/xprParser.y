@@ -1,7 +1,10 @@
 %{
 	#include <stdio.h>
+	#include <bits/stdc++.h>
+	using namespace std;
 	int yylex();
-int yyerror(char *s);
+	int yyerror(char *s);
+
 	extern FILE *yyin;
 	#define YYDEBUG 1
 	
@@ -178,7 +181,7 @@ arguments	:	expr
 			|	expr ',' arguments
 			;
 
-literal		:	intlit
+literal		:	intlit  
 			| 	boollit
 			;
 
@@ -211,10 +214,7 @@ int main(int argc, char **argv)
 }
 
 
-// int yyerror(char *s)
-// {
-// 	fprintf(stderr, "error: %s @ line %d\n", s, yylineno);
-// }
+
 
 
 

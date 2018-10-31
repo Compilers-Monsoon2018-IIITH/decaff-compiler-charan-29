@@ -34,7 +34,7 @@
 # define YY_YY_XPRPARSER_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -59,37 +59,19 @@ extern int yydebug;
     TRUE = 269,
     VOID = 270,
     EOL = 271,
-    COMMENT = 272,
-    ADD = 273,
-    SUB = 274,
-    MUL = 275,
-    DIV = 276,
-    MOD = 277,
-    LT = 278,
-    GT = 279,
-    LE = 280,
-    GE = 281,
-    EE = 282,
-    NE = 283,
-    AND = 284,
-    OR = 285,
-    ALNUM = 286,
-    ALPHA = 287,
-    DIGIT = 288,
-    HEXDGT = 289,
-    DECLIT = 290,
-    HEXLIT = 291,
-    STRINGLIT = 292,
-    CHARLIT = 293,
-    ID = 294,
-    NOT = 295,
-    OPENCIRC = 296,
-    CLOSECIRC = 297,
-    OPENSQR = 298,
-    CLOSESQR = 299,
-    OPENFLWR = 300,
-    CLOSEFLWR = 301,
-    COMMA = 302
+    PROGRAM = 272,
+    PLUSEQ = 273,
+    MINUSEQ = 274,
+    AND = 275,
+    OR = 276,
+    EE = 277,
+    NE = 278,
+    LE = 279,
+    GE = 280,
+    STRINGLIT = 281,
+    DECLIT = 282,
+    HEXLIT = 283,
+    ID = 284
   };
 #endif
 
@@ -100,9 +82,23 @@ typedef int YYSTYPE;
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
+/* Location type.  */
+#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
+typedef struct YYLTYPE YYLTYPE;
+struct YYLTYPE
+{
+  int first_line;
+  int first_column;
+  int last_line;
+  int last_column;
+};
+# define YYLTYPE_IS_DECLARED 1
+# define YYLTYPE_IS_TRIVIAL 1
+#endif
+
 
 extern YYSTYPE yylval;
-
+extern YYLTYPE yylloc;
 int yyparse (void);
 
 #endif /* !YY_YY_XPRPARSER_TAB_H_INCLUDED  */
