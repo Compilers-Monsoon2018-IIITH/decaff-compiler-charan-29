@@ -1,56 +1,66 @@
-#include <vector>
-#include <string>
-#include <iostream>
 #include "visitor.h"
-
+#include <bits/stdc++.h>
 using namespace std;
 
-class ASTNode;
-class ASTNormalIdentifier;
-
-union Node
+class Int
 {
-    vector<ASTNormalIdentifier *> *identifiers;
+
 };
 
-typedef union NODE YYSTYPE;
-
-class ASTNode
+class Identifier
 {
-  public:
-    ASTNode() {}
-    ~ASTNode() {}
-    static string stringFromDataType(DataType d)
-    {
-        switch (d)
-        {
-        case DataType::int_type:
-            return "integer";
-        case DataType::bool_type:
-            return "boolean";
-        case DataType::void_type:
-            return "void";
-        }
-    }
-    virtual void *accept(visitor *v) = 0;
+	public:
+		char* name;
+		IntLiteralNode* intliteral;
+		bool isArr;
+		Identifier(char* name)
+		{
+			this->name = name;
+			isArr = false;
+		}
+
+
+		Identifier(char* name,IntLiteralNode* intliteral)
+		{
+			this->name = name;
+			this->intliteral = intliteral;
+			isArr = true;
+		}
+
+		bool isArray()
+		{
+			return isArr;
+		}
+
+	
 };
 
-class ASTNormalIdentifier : public ASTIdentifier
+class FieldDeclNode
 {
-    string id;
+	public:
+		std::vector<Identifier*> idList;
+		char* dataType;
 
-  public:
-    ASTNormalIdentifier(string id)
-    {
-        this->id = id;
-    }
-    ~ASTNormalIdentifier() {}
-    string getId()
-    {
-        return this->id;
-    }
-    void *accept(Visitor *v)
-    {
-        v->visit(this);
-    }
+		FieldDeclNode(char* dataType,std::vector<Identifier*> idList)
+		{
+			this->dataType=dataType;
+			this->idList=idList;
+		}
+};
+
+class MethodDeclNode
+{
+
+};
+class ProgramNode
+{
+	public:
+		std::vector<FieldDeclNode*	>	fdList;
+		std::vector<MethodDeclNode*	>	mdList;
+
+		ProgramNode(std::vector<FieldDeclNode*	>	fdList,	std::vector<MethodDeclNode* > mdList)
+		{
+			this->fdList = fdList;
+			this->mdList = mdList;
+		}
 };

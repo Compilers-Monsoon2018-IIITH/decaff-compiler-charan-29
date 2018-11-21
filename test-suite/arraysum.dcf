@@ -1,0 +1,29 @@
+class Program
+{
+	void main()
+	{
+		int sum=0;
+		int n;
+		callout("print","Size of array: ");
+		n=read();
+		int[n] ar;
+
+		int i;
+		//initializing array
+		callout("print","Enter elements of array: ");
+		for i=0,n
+		{
+			ar[i]= read();
+		}
+
+		//adding elements of array
+		int j;
+		for j=0,n
+		{
+			sum+=ar[i];
+		}
+
+		//printing results
+		callout("print",sum);
+	}
+}

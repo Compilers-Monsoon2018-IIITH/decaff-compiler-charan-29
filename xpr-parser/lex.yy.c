@@ -663,11 +663,11 @@ int yy_flex_debug = 1;
 
 static yyconst flex_int16_t yy_rule_linenum[48] =
     {   0,
-       23,   24,   26,   27,   28,   29,   30,   31,   32,   33,
-       34,   35,   36,   37,   38,   39,   41,   42,   43,   44,
-       45,   47,   48,   49,   50,   51,   53,   54,   56,   57,
-       58,   60,   61,   63,   64,   65,   66,   67,   68,   69,
-       70,   73,   74,   75,   77,   80,   82
+       27,   28,   30,   31,   32,   33,   34,   35,   36,   37,
+       38,   39,   40,   41,   42,   43,   45,   46,   47,   48,
+       49,   51,   52,   53,   54,   55,   57,   58,   60,   61,
+       62,   64,   65,   67,   68,   69,   70,   71,   72,   73,
+       74,   77,   78,   79,   81,   84,   86
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -678,10 +678,13 @@ static yyconst flex_int16_t yy_rule_linenum[48] =
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "xprScanner.l"
+#line 1 "scanner.l"
 /* just like Unix wc */
-#line 5 "xprScanner.l"
-#include "xprParser.tab.h"
+#line 5 "scanner.l"
+#include <bits/stdc++.h>
+#include "parser.tab.h"
+#include "ast.h"
+#define YY_DECL extern "C" int yylex()
 using namespace std;
 int comment();
 int yyerror(char *s);
@@ -690,7 +693,7 @@ int yyerror(char *s);
 
 	[ \t\r\n]+  	{	/*eat up white space } 
 */
-#line 694 "lex.yy.c"
+#line 697 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -975,10 +978,10 @@ YY_DECL
 
 	{
 /* %% [7.0] user's declarations go here */
-#line 21 "xprScanner.l"
+#line 25 "scanner.l"
 
 
-#line 982 "lex.yy.c"
+#line 985 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1070,248 +1073,248 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 23 "xprScanner.l"
+#line 27 "scanner.l"
 { comment(); }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 24 "xprScanner.l"
+#line 28 "scanner.l"
 {}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 26 "xprScanner.l"
-{ return BOOLEAN; 	}
+#line 30 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return BOOLEAN; 	}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 27 "xprScanner.l"
-{ return BREAK; 	}
+#line 31 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return BREAK; 	}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 28 "xprScanner.l"
-{ return CALLOUT; 	}
+#line 32 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return CALLOUT; 	}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 29 "xprScanner.l"
-{ return CLASS; 	}
+#line 33 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return CLASS; 	}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 30 "xprScanner.l"
-{ return CONTINUE; 	}
+#line 34 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return CONTINUE; 	}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 31 "xprScanner.l"
-{ return ELSE; 	 	}
+#line 35 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return ELSE; 	 	}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 32 "xprScanner.l"
-{ return FALSE;		}
+#line 36 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return FALSE;		}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 33 "xprScanner.l"
-{ return FOR;		}
+#line 37 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return FOR;		}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 34 "xprScanner.l"
-{ return INT;		}
+#line 38 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return INT;		}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 35 "xprScanner.l"
-{ return IF;		}
+#line 39 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return IF;		}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 36 "xprScanner.l"
-{ return RETURN;	}
+#line 40 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return RETURN;	}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 37 "xprScanner.l"
-{ return TRUE;		}
+#line 41 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return TRUE;		}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 38 "xprScanner.l"
-{ return VOID;		}
+#line 42 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return VOID;		}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 39 "xprScanner.l"
-{return PROGRAM;	}
+#line 43 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return PROGRAM;	}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 41 "xprScanner.l"
-{return '+';}
+#line 45 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return '+';}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 42 "xprScanner.l"
-{return '-';}
+#line 46 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return '-';}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 43 "xprScanner.l"
-{return '*';}
+#line 47 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return '*';}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 44 "xprScanner.l"
-{return '/';}
+#line 48 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return '/';}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 45 "xprScanner.l"
-{return '%';}
+#line 49 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return '%';}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 47 "xprScanner.l"
-{return '<';}
+#line 51 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return '<';}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 48 "xprScanner.l"
-{return '>';}
+#line 52 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return '>';}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 49 "xprScanner.l"
-{return '=';}
+#line 53 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return '=';}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 50 "xprScanner.l"
-{return LE;}
+#line 54 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return LE;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 51 "xprScanner.l"
-{return GE;}
+#line 55 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return GE;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 53 "xprScanner.l"
-{return EE;}
+#line 57 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return EE;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 54 "xprScanner.l"
-{return NE;}
+#line 58 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return NE;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 56 "xprScanner.l"
-{return '!';}
+#line 60 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return '!';}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 57 "xprScanner.l"
-{return AND;}
+#line 61 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return AND;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 58 "xprScanner.l"
-{return OR;}
+#line 62 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return OR;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 60 "xprScanner.l"
-{return PLUSEQ;}
+#line 64 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return PLUSEQ;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 61 "xprScanner.l"
-{return MINUSEQ;}
+#line 65 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return MINUSEQ;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 63 "xprScanner.l"
-{return '(';}
+#line 67 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return '(';}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 64 "xprScanner.l"
-{return ')';}
+#line 68 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return ')';}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 65 "xprScanner.l"
-{return '{';}
+#line 69 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return '{';}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 66 "xprScanner.l"
-{return '}';}
+#line 70 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return '}';}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 67 "xprScanner.l"
-{return '[';}
+#line 71 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return '[';}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 68 "xprScanner.l"
-{return ']';}
+#line 72 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return ']';}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 69 "xprScanner.l"
-{return ',';}
+#line 73 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return ',';}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 70 "xprScanner.l"
-{return ';';}
+#line 74 "scanner.l"
+{char* str = (yytext); yylval.sval = str; return ';';}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 73 "xprScanner.l"
-{return DECLIT;}
+#line 77 "scanner.l"
+{yylval.ival = atoi(yytext); 	return DECLIT;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 74 "xprScanner.l"
-{return HEXLIT;}
+#line 78 "scanner.l"
+{yylval.ival = atoi(yytext); 	return HEXLIT;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 75 "xprScanner.l"
-{return ID;}
+#line 79 "scanner.l"
+{char* id = (yytext); yylval.sval = id; 	return ID;}
 	YY_BREAK
 case 45:
 /* rule 45 can match eol */
 YY_RULE_SETUP
-#line 77 "xprScanner.l"
-{return STRINGLIT;}
+#line 81 "scanner.l"
+{ char* str = (yytext); yylval.sval = str;  return STRINGLIT;}
 	YY_BREAK
 case 46:
 /* rule 46 can match eol */
 YY_RULE_SETUP
-#line 80 "xprScanner.l"
+#line 84 "scanner.l"
 {}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 82 "xprScanner.l"
+#line 86 "scanner.l"
 {printf( "Unrecognized character: %s\n", yytext );}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 83 "xprScanner.l"
+#line 87 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1315 "lex.yy.c"
+#line 1318 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2469,7 +2472,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 83 "xprScanner.l"
+#line 87 "scanner.l"
 
 
 

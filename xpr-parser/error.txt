@@ -1,0 +1,6 @@
+make: 'xpr' is up to date.
+bison -d -t --debug --verbose --locations --report=all parser.y
+flex -d scanner.l
+g++ -w -std=c++11 -o xpr visitor.h ast.h  parser.tab.c lex.yy.c -lfl
+makefile:2: recipe for target 'xpr' failed
+make: 'xpr' is up to date.

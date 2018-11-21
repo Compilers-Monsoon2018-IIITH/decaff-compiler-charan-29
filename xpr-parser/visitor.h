@@ -1,7 +1,21 @@
-class ASTNormalIdentifier;
+#include <cstdlib>
+#include <iostream>
+#include <bits/stdc++.h>
+using namespace std;
 
+class ProgramNode;
 class visitor
 {
-    public:
-        virtual void* visit(ASTNormalIdentifier*) = 0;
+public:
+	visitor();
+	~visitor();
+
+
+	virtual int visit(ProgramNode*){};
+	
+};
+
+class ASTvisitor : public visitor
+{
+	int visit(ProgramNode*);
 };
