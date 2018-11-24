@@ -85,10 +85,10 @@ class MethodDeclNode
 		char* returnType;
 		char* methodName;
 
-		std::vector<MethodArgsNode*> argsList;
+		std::vector<MethodArgsNode*>* argsList;
 		BlockNode* block;
 
-		MethodDeclNode(char* returnType,	char* methodName,	std::vector<MethodArgsNode*> argsList,	BlockNode* block)
+		MethodDeclNode(char* returnType,	char* methodName,	std::vector<MethodArgsNode*>* argsList,	BlockNode* block)
 		{
 			this->returnType=returnType;
 			this->methodName=methodName;
