@@ -3,10 +3,15 @@
 
 %{
 #include <bits/stdc++.h>
-#include "parser.tab.h"
-#include "ast.h"
-#define YY_DECL extern "C" int yylex()
+
 using namespace std;
+#include "ast.h"
+#include "parser.tab.h"
+
+
+
+#define YY_DECL extern "C" int yylex()
+
 int comment();
 int yyerror(char *s);
 %}

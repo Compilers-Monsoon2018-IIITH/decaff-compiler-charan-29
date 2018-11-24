@@ -80,21 +80,28 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 22 "parser.y" /* yacc.c:1909  */
+#line 24 "parser.y" /* yacc.c:1909  */
 
 	int ival;
 	char* sval;
 
-	ProgramNode* 			prgNodeType;
-	FieldDeclNode*			fldDecNodeType;
+	ProgramNode* 		     	prgnodetype;
 
-	vector<FieldDeclNode*> 	fldDecListType;
-	MethodDeclNode* 		mthdDecNodeType;
+	vector<FieldDeclNode*>*  	fieldDecType;
 
-	vector<Identifier*>		idListType;
-	Identifier*				idType;
+	MethodDeclNode* 	     	methodDecType;
+	vector<MethodDeclNode*>* 	methodDecListType;
 
-#line 98 "parser.tab.h" /* yacc.c:1909  */
+	Identifier*			     	idType;
+	vector<Identifier*>*	 	fieldArgsType;
+
+	IntNode* 					intlitType;
+	MethodArgsNode* 			methodArgType;
+	vector<MethodArgsNode*>* 	methodArgsType;
+
+	BlockNode*					blockType;
+
+#line 105 "parser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

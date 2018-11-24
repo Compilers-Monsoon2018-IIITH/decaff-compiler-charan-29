@@ -2,17 +2,19 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <bits/stdc++.h>
-	#include "ast.h"
 	using namespace std;
+
+	#include "ast.h"
+
 	extern "C" int yylex();
 	extern "C" int yyerror(char *s);
-	int yyparse();
+	extern "C" int yyparse();
 
 	ProgramNode *strt = NULL;
 
 	extern FILE *yyin;
 	#define YYDEBUG 1
-	
+
 	
 %}
 
@@ -23,42 +25,58 @@
 	int ival;
 	char* sval;
 
-	ProgramNode* 			prgNodeType;
-	FieldDeclNode*			fldDecNodeType;
+	ProgramNode* 		     	prgnodetype;
 
-	vector<FieldDeclNode*> 	fldDecListType;
-	MethodDeclNode* 		mthdDecNodeType;
+	vector<FieldDeclNode*>*  	fieldDecType;
 
-	vector<Identifier*>		idListType;
-	Identifier*				idType;
-}
+	MethodDeclNode* 	     	methodDecType;
+	vector<MethodDeclNode*>* 	methodDecListType;
+
+	Identifier*			     	idType;
+	vector<Identifier*>*	 	fieldArgsType;
+
+	IntNode* 					intlitType;
+	MethodArgsNode* 			methodArgType;
+	vector<MethodArgsNode*>* 	methodArgsType;
+
+	BlockNode*					blockType;
+};
 
 
 %start	classBegin
 
 
-%type	<prgNodeType>		classBegin
-%type 	<fldDecListType>	fieldDec
-%type 	<mthdDecNodeType> 	methodDec
-%type 	<sval>				type
-%type 	<idListType> 		fieldArgs
-%type 	<ival> 				intlit //to be changed to expression node
+%type	<prgnodetype>		classBegin
 
-%token	BOOLEAN
-%token	BREAK
-%token	CALLOUT
-%token	CLASS
-%token	CONTINUE
-%token	ELSE
-%token	FALSE
-%token	FOR
-%token	INT
-%token	IF
-%token	RETURN
-%token	TRUE
-%token	VOID
+%type 	<fieldDecType>		fieldDec
+
+%type 	<methodDecType> 		methodDec
+%type 	<methodDecListType>		methodDecList
+
+%type 	<methodArgType> 	methodArg
+%type 	<methodArgsType> 	methodArgs
+
+%type 	<sval>				type
+%type 	<fieldArgsType> 	fieldArgs
+%type 	<intlitType> 		intlit //to be changed to expression node
+
+%type 	<blockType> 		block
+
+%token	<sval>	BOOLEAN
+%token	<sval>	BREAK
+%token	<sval>	CALLOUT
+%token	<sval>	CLASS
+%token	<sval>	CONTINUE
+%token	<sval>	ELSE
+%token	<sval>	FALSE
+%token	<sval>	FOR
+%token	<sval>	INT
+%token	<sval>	IF
+%token	<sval>	RETURN
+%token	<sval>	TRUE
+%token	<sval> 	VOID
 %token	EOL
-%token	PROGRAM
+%token	<sval>	PROGRAM
 
 %right '=' PLUSEQ MINUSEQ
 %left	AND OR
@@ -100,46 +118,57 @@
 //		;
 
 classBegin	:	CLASS PROGRAM '{' '}'						{	strt = new ProgramNode(NULL,NULL);	}
-			|	CLASS PROGRAM '{' fieldDec methodDec '}'	{	strt = new ProgramNode($4,$5); 	}
-			|	CLASS PROGRAM '{' methodDec '}'				{	strt = new ProgramNode(NULL,$4);	}
+			|	CLASS PROGRAM '{' fieldDec methodDecList '}'	{	strt = new ProgramNode($4,$5); 		}
+			|	CLASS PROGRAM '{' methodDecList '}'				{	strt = new ProgramNode(NULL,$4);	}
 			|	CLASS PROGRAM '{' fieldDec '}'				{	strt = new ProgramNode($4,NULL);	}
 			;
 
 fieldDec	:	type fieldArgs ';'							{	$$ = new vector<FieldDeclNode*>;
-																$$.push_back(new FieldDeclNode($1,$2));	}
+																$$->push_back(new FieldDeclNode($1,$2));	}
 			|	fieldDec type fieldArgs ';' 				{	$$ = $1;
-																$$.push_back(new FieldDeclNode($1,$2));	}																								
+																$$->push_back(new FieldDeclNode($2,$3));	}																								
 			;
 
 fieldArgs	:	ID 											{	Identifier* idfr = new Identifier($1);
 																$$ = new vector<Identifier*>;
-																$$.push_back(idfr);						}
+																$$->push_back(idfr);						}
 			
 			|	ID ',' fieldArgs							{	Identifier* idfr = new Identifier($1);
 																$$ = $3;
-																$$.push_back(idfr);						}
+																$$->push_back(idfr);						}
 
 			|	ID '[' intlit ']' 							{	Identifier* idfr = new Identifier($1,$3);
 																$$ = new vector<Identifier*>; 
-																$$.push_back(idfr);						}
+																$$->push_back(idfr);						}
 
 			|	ID '[' intlit ']' ',' fieldArgs				{	Identifier* idfr = new Identifier($1,$3);
-																$$ = $6
-																$$.push_back(idfr);						}
+																$$ = $6;
+																$$->push_back(idfr);						}
 			;
 
 
-methodDecList	:	type ID '(' methodArgs ')' block 	
-				|	type ID '('  ')' block	
-				| 	VOID ID '(' methodArgs ')' block	
-				|	VOID ID '('  ')' block	
 
-methodDec 	:	methodDecList
-			|	methodDec methodDecList
+
+methodDec	:		type ID '(' methodArgs ')' block 	{	$$ = new MethodDeclNode($1,$2,$4,$6);	}
+				|	type ID '('  ')' block				{	$$ = new MethodDeclNode($1,$2,NULL,$5);	}	
+				| 	VOID ID '(' methodArgs ')' block	{	$$ = new MethodDeclNode($1,$2,$4,$6);	}			
+				|	VOID ID '('  ')' block				{	$$ = new MethodDeclNode($1,$2,NULL,$5);	}	
+
+methodDecList 	:	methodDec					{	$$ = new vector<MethodDeclNode*>;
+												 	$$->push_back($1);				}
+
+				|	methodDecList methodDec		{	$$ = $1;
+												  	$$->push_back($2);				}
+				;
+
+methodArg 	:	type ID 						{	$$ = new MethodArgsNode($1,$2);	}
 			;
 
-methodArgs	:	type ID
-			|	type ID ',' methodArgs
+methodArgs	:	methodArg						{ 	$$ = new vector<MethodArgsNode*>;		
+												   	$$->push_back($1); 				}
+
+			|	methodArg ',' methodArgs 		{ 	$$ = $3;
+												  	$$->push_back($1);				}
 			;
 
 block		:	'{'  '}'
@@ -232,8 +261,8 @@ literal		:	intlit
 			| 	boollit
 			;
 
-intlit		:	DECLIT 	{	$$ = new Int($1);}
-			|	HEXLIT 	{	$$ = new Int($1);}
+intlit		:	DECLIT 	{	$$ = new IntNode($1);	}
+			|	HEXLIT 	{	$$ = new IntNode($1);	}
 			;
 
 boollit		:	TRUE
