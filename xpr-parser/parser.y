@@ -7,7 +7,6 @@
 	#include "ast.h"
 
 	extern "C" int yylex();
-	extern "C" int yyerror(char *s);
 	extern "C" int yyparse();
 
 	ProgramNode *strt = NULL;
@@ -17,6 +16,7 @@
 
 	
 %}
+
 
 
 
@@ -118,10 +118,10 @@
 //		|	start classBegin	
 //		;
 
-classBegin	:	CLASS PROGRAM '{' '}'						{	strt = new ProgramNode(NULL,NULL);	}
+classBegin	:	CLASS PROGRAM '{' '}'							{	strt = new ProgramNode(NULL,NULL);	}
 			|	CLASS PROGRAM '{' fieldDec methodDecList '}'	{	strt = new ProgramNode($4,$5); 		}
 			|	CLASS PROGRAM '{' methodDecList '}'				{	strt = new ProgramNode(NULL,$4);	}
-			|	CLASS PROGRAM '{' fieldDec '}'				{	strt = new ProgramNode($4,NULL);	}
+			|	CLASS PROGRAM '{' fieldDec '}'					{	strt = new ProgramNode($4,NULL);	}
 			;
 
 fieldDec	:	type fieldArgs ';'							{	$$ = new vector<FieldDeclNode*>;
@@ -156,20 +156,20 @@ methodDec	:		type ID '(' methodArgs ')' block 	{	$$ = new MethodDeclNode($1,$2,$
 				|	VOID ID '('  ')' block				{	$$ = new MethodDeclNode($1,$2,NULL,$5);	}	
 
 methodDecList 	:	methodDec					{	$$ = new vector<MethodDeclNode*>;
-												 	$$->push_back($1);				}
+												 	$$->push_back($1);					}
 
 				|	methodDecList methodDec		{	$$ = $1;
-												  	$$->push_back($2);				}
+												  	$$->push_back($2);					}
 				;
 
-methodArg 	:	type ID 						{	$$ = new MethodArgsNode($1,$2);	}
+methodArg 	:	type ID 						{	$$ = new MethodArgsNode($1,$2);		}
 			;
 
 methodArgs	:	methodArg						{ 	$$ = new vector<MethodArgsNode*>;		
-												   	$$->push_back($1); 				}
+												   	$$->push_back($1); 					}
 
 			|	methodArg ',' methodArgs 		{ 	$$ = $3;
-												  	$$->push_back($1);				}
+												  	$$->push_back($1);					}
 			;
 
 block		:	'{'  '}'
@@ -288,7 +288,6 @@ int main(int argc, char **argv)
 	yyparse();
 	return 0;
 }
-
 
 
 

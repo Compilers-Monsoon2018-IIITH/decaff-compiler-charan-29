@@ -13,7 +13,7 @@ using namespace std;
 #define YY_DECL extern "C" int yylex()
 
 int comment();
-int yyerror(char *s);
+extern "C" int yyerror(char *s);
 %}
 /*boolean break callout class continue else false for if int return true void*/
 /* to be escaped characters .^$*+?()[{\|-]    
