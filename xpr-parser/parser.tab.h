@@ -68,10 +68,13 @@ extern int yydebug;
     NE = 278,
     LE = 279,
     GE = 280,
-    STRINGLIT = 281,
-    DECLIT = 282,
-    HEXLIT = 283,
-    ID = 284
+    DOUBLEQ = 281,
+    SINGLEQ = 282,
+    STRINGLIT = 283,
+    CHARLIT = 284,
+    DECLIT = 285,
+    HEXLIT = 286,
+    ID = 287
   };
 #endif
 
@@ -84,6 +87,7 @@ union YYSTYPE
 
 	int ival;
 	char* sval;
+	char cval;
 
 	ProgramNode* 		     	prgnodetype;
 
@@ -104,9 +108,32 @@ union YYSTYPE
 	VarDeclNode* 				varDeclSingleType;
 	vector<VarDeclNode*>* 		varDeclType;
 
-	BlockNode*					blockType;
+	LiteralNode*				literalType;
+	BoolNode* 					boollitType;
 
-#line 110 "parser.tab.h" /* yacc.c:1909  */
+	MethodNode* 			methodcallType;
+
+
+	BlockNode*					blockType;
+	LocationNode* 				locationType;
+
+	UnaryNode* 					unrType;
+	BinaryNode* 				bnrType;
+
+	ExpressionNode* 			exprType;
+	vector<ExpressionNode*>* 	argumentsType;
+
+	StringNode* 				stringlitType;
+	CharNode* 					charlitType;
+
+
+	CalloutArgsNode* 			calloutArgsType;
+	vector<CalloutArgsNode*>* 	calloutArgsListType;
+
+	StatementNode* 				statementContentsType;
+	vector<StatementNode*>*		statementType;
+
+#line 137 "parser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
