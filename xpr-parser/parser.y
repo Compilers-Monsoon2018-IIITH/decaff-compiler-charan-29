@@ -60,7 +60,7 @@
 	vector<ExpressionNode*>* 	argumentsType;
 
 	StringNode* 				stringlitType;
-	CharNode* 					charlitType;
+
 
 
 	CalloutArgsNode* 			calloutArgsType
@@ -105,7 +105,7 @@
 %type 	<idListType> 		blockVars
 
 %type 	<stringlitType> 	stringlit
-%type 	<charlitType> 		charlit
+
 
 %type 	<calloutArgsListType>	calloutArgsList
 
@@ -148,16 +148,15 @@
 %token	<ival> HEXLIT
 %token	<sval> ID
 %token	<sval> '!'
-%token 	<sval> '('
-%token 	<sval> ')'
-%token	<sval> '[' 
-%token	<sval> ']'
-%token	<sval> '{' 
-%token	<sval> '}'
-%token  <sval> ','
-%token	<sval> ';'
-%token	<sval> SINGLEQ
-%token	<sval> DOUBLEQ
+%token 	 '('
+%token 	 ')'
+%token	 '[' 
+%token	 ']'
+%token	 '{' 
+%token	 '}'
+%token   ','
+%token	 ';'
+
 
 
 // 
@@ -305,11 +304,14 @@ location	:	ID  				{$$ = new LocationNode($1);		}
 			|	ID '[' expr ']' 	{$$ = new LocationNode($1,$3);	}
 			;
 
+
+methodname	:	ID 					
+			;
 //method call
-methodcall	:	ID '(' ')'	 		 	 							{$$ = new MethodCallNode();		}
-			|	ID '(' arguments ')'								{$$ = new MethodCallNode($3);	}
-			|	CALLOUT '(' stringlit ',' calloutArgsList ')'	 	{$$ = new CalloutNode($3,$5);		}
-			| 	CALLOUT '(' stringlit ')'							{$$ = new CalloutNode($3);	} 
+methodcall	:	methodname '(' ')'	 		 	 							{$$ = new MethodCallNode();		}
+			|	methodname '(' arguments ')'								{$$ = new MethodCallNode($3);	}
+			|	CALLOUT '(' stringlit ',' calloutArgsList ')'	 			{$$ = new CalloutNode($3,$5);		}
+			| 	CALLOUT '(' stringlit ')'									{$$ = new CalloutNode($3);	} 
 			;
 
 calloutArgsList	:	 	expr 						 	{$$ = new vector<CalloutArgsNode*>;
@@ -341,7 +343,6 @@ arguments	:	expr  						{	$$ = new vector<ExpressionNode*>;
 
 literal		:	intlit    			{ $$ = new LiteralNode($1);	}
 			| 	boollit 			{ $$ = new LiteralNode($1);	}
-			|	stringlit           { $$ = new LiteralNode($1);	}
 			; 
 
 intlit		:	DECLIT 	{	$$ = new IntNode($1);	}
@@ -355,8 +356,8 @@ boollit		:	TRUE 	{	$$ = new BoolNode($1);	}
 stringlit 	:	STRINGLIT 	{$$ = new StringNode($1);}
 			;
 
-charlit		:	CHARLIT 	{$$ = new CharNode($1);}
-			;
+
+
 
 %%
 

@@ -72,9 +72,7 @@ extern int yydebug;
     CHARLIT = 282,
     DECLIT = 283,
     HEXLIT = 284,
-    ID = 285,
-    SINGLEQ = 286,
-    DOUBLEQ = 287
+    ID = 285
   };
 #endif
 
@@ -121,7 +119,7 @@ union YYSTYPE
 	vector<ExpressionNode*>* 	argumentsType;
 
 	StringNode* 				stringlitType;
-	CharNode* 					charlitType;
+
 
 
 	CalloutArgsNode* 			calloutArgsType
@@ -130,7 +128,7 @@ union YYSTYPE
 	StatementNode* 				statementContentsType;
 	vector<StatementNode*> 		statementType;
 
-#line 134 "parser.tab.h" /* yacc.c:1909  */
+#line 132 "parser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
