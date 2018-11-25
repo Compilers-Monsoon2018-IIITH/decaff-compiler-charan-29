@@ -65,6 +65,9 @@
 
 	CalloutArgsNode* 			calloutArgsType
 	vector<CalloutArgsNode*>* 	calloutArgsListType;
+
+	StatementNode* 				statementContentsType;
+	vector<StatementNode*> 		statementType;
 };
 
 
@@ -106,6 +109,8 @@
 
 %type 	<calloutArgsListType>	calloutArgsList
 
+%type 	<statementContentsType> statementContents
+%type 	<statementType> 		statement	
 
 %token	<sval>	BOOLEAN
 %token	<sval>	BREAK
@@ -245,22 +250,27 @@ blockVars		:	ID								{	$$ = new vector<Identifier*>;
 
 
 
-statementContents	:	location '=' expr ';'     	{	}		   				
-					|	location PLUSEQ expr ';'				
-					|	location MINUSEQ expr ';'				
-					|	methodcall ';'							
-					|	IF '(' expr ')' block 					
-					|   IF '(' expr ')' block ELSE block 		
-					|	FOR ID '=' expr ',' expr block 				
-					|	RETURN ';'			
-					| 	RETURN expr ';'					
-					| 	BREAK ';'								
-					| 	CONTINUE ';'							
-					| 	block 											
+statementContents	:	location '=' expr ';'     	{	$$ = new AssignmentNode($1,$2,$3);	}		   				
+					|	location PLUSEQ expr ';'	{	$$ = new AssignmentNode($1,$2,$3);	}				
+					|	location MINUSEQ expr ';'	{	$$ = new AssignmentNode($1,$2,$3);	}				
+					|	methodcall ';'				{	$$ = new MethodNode(); $$ = $1;		}			
+					|	IF '(' expr ')' block 		{	$$ = new IfNode($3,$5,NULL);}			
+					|   IF '(' expr ')' block ELSE block {	$$ = new IfNode($3,$5,$7);}		
+					|	FOR ID '=' expr ',' expr block 	{$$ = new ForNode($2,$4,$6,$7);}			
+					|	RETURN ';'					{	$$ = new ReturnNode(NULL);}
+					| 	RETURN expr ';'				{	$$ = new ReturnNode($2);}			
+					| 	BREAK ';'					{ 	$$ = new BreakNode();}			
+					| 	CONTINUE ';'				{	$$ = new ContinueNode();}			
+					| 	block 						{	$$ = new BlockNode(); $$ = $1;}					
 					;
 
-statement 	:	statementContents 				
-			|	statement statementContents  	
+statement 	:	statementContents 			      { $$ = new vector<StatementNode*>;
+													StatementNode* temp = new StatementNode($1);
+													$$->push_back(temp);	}	
+
+			|	statement statementContents  	  {	$$ = $1;
+													StatementNode* temp = new StatementNode($2);
+													$$->push_back(temp);	}
 			;
 
 
@@ -298,23 +308,26 @@ location	:	ID  				{$$ = new LocationNode($1);		}
 //method call
 methodcall	:	ID '(' ')'	 		 	 							{$$ = new MethodCallNode();		}
 			|	ID '(' arguments ')'								{$$ = new MethodCallNode($3);	}
-			|	CALLOUT '(' stringlit ')'	 						{$$ = new CalloutNode($3);		}
-			| 	CALLOUT '(' stringlit ',' calloutArgsList ')'		{$$ = new CalloutNode($3,$5);	} 
+			|	CALLOUT '(' stringlit ',' calloutArgsList ')'	 	{$$ = new CalloutNode($3,$5);		}
+			| 	CALLOUT '(' stringlit ')'							{$$ = new CalloutNode($3);	} 
 			;
 
-calloutArgsList	:	stringlit 							{$$ = new vector<CalloutArgsNode*>;
+calloutArgsList	:	 	expr 						 	{$$ = new vector<CalloutArgsNode*>;
 														 CalloutArgsNode* temp = new CalloutArgsNode($1);
 														 $$->push_back(temp);}	
 
-				|	stringlit ',' calloutArgsList 		{$$ = $3;
-														 $$->push_back($1);}
-
-				| 	expr 						 		{$$ = new vector<CalloutArgsNode*>;
+				|	stringlit 							{$$ = new vector<CalloutArgsNode*>;
 														 CalloutArgsNode* temp = new CalloutArgsNode($1);
 														 $$->push_back(temp);}	
 
 				| 	expr ',' calloutArgsList 			{$$ = $3;
-														 $$->push_back($1);}										
+														 $$->push_back($1);}		
+
+
+				|	stringlit ',' calloutArgsList 		{$$ = $3;
+														 $$->push_back($1);}
+
+												
 				;
 
 
@@ -329,7 +342,6 @@ arguments	:	expr  						{	$$ = new vector<ExpressionNode*>;
 literal		:	intlit    			{ $$ = new LiteralNode($1);	}
 			| 	boollit 			{ $$ = new LiteralNode($1);	}
 			|	stringlit           { $$ = new LiteralNode($1);	}
-			|	charlit 		    { $$ = new LiteralNode($1);	}	
 			; 
 
 intlit		:	DECLIT 	{	$$ = new IntNode($1);	}
@@ -340,10 +352,11 @@ boollit		:	TRUE 	{	$$ = new BoolNode($1);	}
 			|	FALSE	{ 	$$ = new BoolNode($1);	}
 			;
 
-stringlit 	:	DOUBLEQ	STRINGLIT DOUBLEQ  	{$$ = new StringNode($1);}
+stringlit 	:	STRINGLIT 	{$$ = new StringNode($1);}
 			;
 
-charlit		:	SINGLEQ	CHARLIT SINGLEQ 	{$$ = new CharNode($2);}
+charlit		:	CHARLIT 	{$$ = new CharNode($1);}
+			;
 
 %%
 

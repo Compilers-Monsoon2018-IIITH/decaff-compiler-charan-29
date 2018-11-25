@@ -154,13 +154,29 @@ class VarDeclNode
 
 
 
-class MethodCallNode
+class MethodNode : public StatementNode
+{
+public:
+	MethodNode();
+	~MethodNode();
+	
+};
+
+class MethodCallNode : public MethodNode
 {
 public:
 	MethodCallNode();
 	~MethodCallNode();
 
 	MethodCallNode()
+	
+};
+
+class CalloutNode : public MethodNode
+{
+public:
+	CalloutNode();
+	~CalloutNode();
 	
 };
 
@@ -189,6 +205,51 @@ public:
 		this->literal = location;
 	}
 
+
+	
+};
+
+
+class ContinueNode : public StatementNode
+{
+public:
+	ContinueNode();
+	~ContinueNode();
+	
+};
+class BreakNode : public StatementNode
+{
+public:
+	BreakNode();
+	~BreakNode();
+	
+};
+class ReturnNode : public StatementNode
+{
+public:
+	ReturnNode();
+	~ReturnNode();
+	
+};
+class ForNode : public StatementNode
+{
+public:
+	ForNode();
+	~ForNode();
+	
+};
+class IfNode : public StatementNode
+{
+public:
+	IfNode();
+	~IfNode();
+	
+};
+class AssignmentNode :	public StatementNode
+{
+public:
+	AssignmentNode();
+	~AssignmentNode();
 
 	
 };
@@ -226,7 +287,7 @@ class StatementNode
 	
 };
 
-class BlockNode
+class BlockNode : public StatementNode
 {
 	public:
 	BlockNode();
