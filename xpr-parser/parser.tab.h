@@ -93,15 +93,20 @@ union YYSTYPE
 	vector<MethodDeclNode*>* 	methodDecListType;
 
 	Identifier*			     	idType;
-	vector<Identifier*>*	 	fieldArgsType;
+	vector<Identifier*>*	 	idListType;
+
 
 	IntNode* 					intlitType;
 	MethodArgsNode* 			methodArgType;
 	vector<MethodArgsNode*>* 	methodArgsType;
 
+
+	VarDeclNode* 				varDeclSingleType;
+	vector<VarDeclNode*>* 		varDeclType;
+
 	BlockNode*					blockType;
 
-#line 105 "parser.tab.h" /* yacc.c:1909  */
+#line 110 "parser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

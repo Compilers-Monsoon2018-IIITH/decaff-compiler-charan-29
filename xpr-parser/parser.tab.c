@@ -72,8 +72,8 @@
 	#include "ast.h"
 
 	extern "C" int yylex();
-	extern "C" int yyerror(char *s);
 	extern "C" int yyparse();
+	extern "C" int yyerror(char *s);
 
 	ProgramNode *strt = NULL;
 
@@ -165,15 +165,20 @@ union YYSTYPE
 	vector<MethodDeclNode*>* 	methodDecListType;
 
 	Identifier*			     	idType;
-	vector<Identifier*>*	 	fieldArgsType;
+	vector<Identifier*>*	 	idListType;
+
 
 	IntNode* 					intlitType;
 	MethodArgsNode* 			methodArgType;
 	vector<MethodArgsNode*>* 	methodArgsType;
 
+
+	VarDeclNode* 				varDeclSingleType;
+	vector<VarDeclNode*>* 		varDeclType;
+
 	BlockNode*					blockType;
 
-#line 177 "parser.tab.c" /* yacc.c:355  */
+#line 182 "parser.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -204,7 +209,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 208 "parser.tab.c" /* yacc.c:358  */
+#line 213 "parser.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -506,15 +511,15 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   122,   122,   123,   124,   125,   128,   130,   134,   138,
-     142,   146,   154,   155,   156,   157,   159,   162,   166,   169,
-     172,   176,   177,   178,   179,   182,   183,   186,   187,   191,
-     192,   193,   194,   195,   196,   197,   198,   199,   200,   201,
-     202,   205,   206,   210,   211,   215,   216,   217,   218,   219,
-     220,   221,   222,   223,   224,   225,   226,   227,   228,   229,
-     230,   231,   232,   233,   237,   238,   242,   245,   246,   247,
-     248,   251,   252,   253,   254,   257,   258,   259,   262,   263,
-     266,   267,   270,   271
+       0,   130,   130,   131,   132,   133,   136,   138,   142,   146,
+     150,   154,   162,   163,   164,   165,   167,   170,   174,   177,
+     180,   184,   185,   186,   187,   190,   194,   199,   203,   210,
+     211,   212,   213,   214,   215,   216,   217,   218,   219,   220,
+     221,   224,   225,   229,   230,   234,   235,   236,   237,   238,
+     239,   240,   241,   242,   243,   244,   245,   246,   247,   248,
+     249,   250,   251,   252,   256,   257,   261,   264,   265,   266,
+     267,   270,   271,   272,   273,   276,   277,   278,   281,   282,
+     285,   286,   289,   290
 };
 #endif
 
@@ -530,7 +535,7 @@ static const char *const yytname[] =
   "STRINGLIT", "DECLIT", "HEXLIT", "ID", "'('", "')'", "'['", "']'", "'{'",
   "'}'", "','", "';'", "$accept", "classBegin", "fieldDec", "fieldArgs",
   "methodDec", "methodDecList", "methodArg", "methodArgs", "block",
-  "varDecl", "vars", "statementContents", "statement", "type", "expr",
+  "varDecl", "blockVars", "statementContents", "statement", "type", "expr",
   "location", "methodname", "methodcall", "calloutArgsList",
   "stringLiteral", "arguments", "literal", "intlit", "boollit", YY_NULLPTR
 };
@@ -597,13 +602,13 @@ static const yytype_uint8 yydefact[] =
        0,    41,     0,     0,     0,     0,     0,    20,    14,    12,
        0,    38,     0,    39,     0,     0,    83,    82,     0,     0,
        0,    36,     0,    45,    46,    47,    78,    79,     0,    22,
-       0,    23,    42,    28,     0,     0,     0,     0,     0,    32,
+       0,    23,    42,    27,     0,     0,     0,     0,     0,    32,
       11,    75,     0,     0,     0,    48,    49,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,    37,     0,    24,     0,    26,     0,     0,     0,    67,
+       0,    37,     0,    24,     0,    25,     0,     0,     0,    67,
       76,     0,    69,     0,     0,     0,    63,    61,    62,    59,
       60,    55,    56,    57,    58,    53,    54,    50,    51,    52,
-      65,    27,    25,    29,    30,    31,     0,    68,    71,     0,
+      65,    28,    26,    29,    30,    31,     0,    68,    71,     0,
       72,     0,    33,    77,     0,    70,     0,     0,     0,    73,
       74,    35,    34
 };
@@ -776,7 +781,7 @@ static const yytype_uint8 yyr2[] =
 {
        0,     2,     4,     6,     5,     5,     3,     4,     1,     3,
        4,     6,     6,     5,     6,     5,     1,     2,     2,     1,
-       3,     2,     3,     3,     4,     4,     3,     3,     1,     4,
+       3,     2,     3,     3,     4,     3,     4,     1,     3,     4,
        4,     4,     2,     5,     7,     7,     2,     3,     2,     2,
        1,     1,     2,     1,     1,     1,     1,     1,     2,     2,
        3,     3,     3,     3,     3,     3,     3,     3,     3,     3,
@@ -1552,147 +1557,203 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 122 "parser.y" /* yacc.c:1646  */
+#line 130 "parser.y" /* yacc.c:1646  */
     {	strt = new ProgramNode(NULL,NULL);	}
-#line 1558 "parser.tab.c" /* yacc.c:1646  */
+#line 1563 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 123 "parser.y" /* yacc.c:1646  */
+#line 131 "parser.y" /* yacc.c:1646  */
     {	strt = new ProgramNode((yyvsp[-2].fieldDecType),(yyvsp[-1].methodDecListType)); 		}
-#line 1564 "parser.tab.c" /* yacc.c:1646  */
+#line 1569 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 124 "parser.y" /* yacc.c:1646  */
+#line 132 "parser.y" /* yacc.c:1646  */
     {	strt = new ProgramNode(NULL,(yyvsp[-1].methodDecListType));	}
-#line 1570 "parser.tab.c" /* yacc.c:1646  */
+#line 1575 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 125 "parser.y" /* yacc.c:1646  */
+#line 133 "parser.y" /* yacc.c:1646  */
     {	strt = new ProgramNode((yyvsp[-1].fieldDecType),NULL);	}
-#line 1576 "parser.tab.c" /* yacc.c:1646  */
+#line 1581 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 128 "parser.y" /* yacc.c:1646  */
+#line 136 "parser.y" /* yacc.c:1646  */
     {	(yyval.fieldDecType) = new vector<FieldDeclNode*>;
-																(yyval.fieldDecType)->push_back(new FieldDeclNode((yyvsp[-2].sval),(yyvsp[-1].fieldArgsType)));	}
-#line 1583 "parser.tab.c" /* yacc.c:1646  */
+																(yyval.fieldDecType)->push_back(new FieldDeclNode((yyvsp[-2].sval),(yyvsp[-1].idListType)));	}
+#line 1588 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 130 "parser.y" /* yacc.c:1646  */
+#line 138 "parser.y" /* yacc.c:1646  */
     {	(yyval.fieldDecType) = (yyvsp[-3].fieldDecType);
-																(yyval.fieldDecType)->push_back(new FieldDeclNode((yyvsp[-2].sval),(yyvsp[-1].fieldArgsType)));	}
-#line 1590 "parser.tab.c" /* yacc.c:1646  */
+																(yyval.fieldDecType)->push_back(new FieldDeclNode((yyvsp[-2].sval),(yyvsp[-1].idListType)));	}
+#line 1595 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 134 "parser.y" /* yacc.c:1646  */
+#line 142 "parser.y" /* yacc.c:1646  */
     {	Identifier* idfr = new Identifier((yyvsp[0].sval));
-																(yyval.fieldArgsType) = new vector<Identifier*>;
-																(yyval.fieldArgsType)->push_back(idfr);						}
-#line 1598 "parser.tab.c" /* yacc.c:1646  */
+																(yyval.idListType) = new vector<Identifier*>;
+																(yyval.idListType)->push_back(idfr);						}
+#line 1603 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 138 "parser.y" /* yacc.c:1646  */
+#line 146 "parser.y" /* yacc.c:1646  */
     {	Identifier* idfr = new Identifier((yyvsp[-2].sval));
-																(yyval.fieldArgsType) = (yyvsp[0].fieldArgsType);
-																(yyval.fieldArgsType)->push_back(idfr);						}
-#line 1606 "parser.tab.c" /* yacc.c:1646  */
+																(yyval.idListType) = (yyvsp[0].idListType);
+																(yyval.idListType)->push_back(idfr);						}
+#line 1611 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 142 "parser.y" /* yacc.c:1646  */
+#line 150 "parser.y" /* yacc.c:1646  */
     {	Identifier* idfr = new Identifier((yyvsp[-3].sval),(yyvsp[-1].intlitType));
-																(yyval.fieldArgsType) = new vector<Identifier*>; 
-																(yyval.fieldArgsType)->push_back(idfr);						}
-#line 1614 "parser.tab.c" /* yacc.c:1646  */
+																(yyval.idListType) = new vector<Identifier*>; 
+																(yyval.idListType)->push_back(idfr);						}
+#line 1619 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 146 "parser.y" /* yacc.c:1646  */
+#line 154 "parser.y" /* yacc.c:1646  */
     {	Identifier* idfr = new Identifier((yyvsp[-5].sval),(yyvsp[-3].intlitType));
-																(yyval.fieldArgsType) = (yyvsp[0].fieldArgsType);
-																(yyval.fieldArgsType)->push_back(idfr);						}
-#line 1622 "parser.tab.c" /* yacc.c:1646  */
+																(yyval.idListType) = (yyvsp[0].idListType);
+																(yyval.idListType)->push_back(idfr);						}
+#line 1627 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 154 "parser.y" /* yacc.c:1646  */
+#line 162 "parser.y" /* yacc.c:1646  */
     {	(yyval.methodDecType) = new MethodDeclNode((yyvsp[-5].sval),(yyvsp[-4].sval),(yyvsp[-2].methodArgsType),(yyvsp[0].blockType));	}
-#line 1628 "parser.tab.c" /* yacc.c:1646  */
+#line 1633 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 155 "parser.y" /* yacc.c:1646  */
+#line 163 "parser.y" /* yacc.c:1646  */
     {	(yyval.methodDecType) = new MethodDeclNode((yyvsp[-4].sval),(yyvsp[-3].sval),NULL,(yyvsp[0].blockType));	}
-#line 1634 "parser.tab.c" /* yacc.c:1646  */
+#line 1639 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 156 "parser.y" /* yacc.c:1646  */
+#line 164 "parser.y" /* yacc.c:1646  */
     {	(yyval.methodDecType) = new MethodDeclNode((yyvsp[-5].sval),(yyvsp[-4].sval),(yyvsp[-2].methodArgsType),(yyvsp[0].blockType));	}
-#line 1640 "parser.tab.c" /* yacc.c:1646  */
+#line 1645 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 157 "parser.y" /* yacc.c:1646  */
+#line 165 "parser.y" /* yacc.c:1646  */
     {	(yyval.methodDecType) = new MethodDeclNode((yyvsp[-4].sval),(yyvsp[-3].sval),NULL,(yyvsp[0].blockType));	}
-#line 1646 "parser.tab.c" /* yacc.c:1646  */
+#line 1651 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 159 "parser.y" /* yacc.c:1646  */
+#line 167 "parser.y" /* yacc.c:1646  */
     {	(yyval.methodDecListType) = new vector<MethodDeclNode*>;
-												 	(yyval.methodDecListType)->push_back((yyvsp[0].methodDecType));				}
-#line 1653 "parser.tab.c" /* yacc.c:1646  */
+												 	(yyval.methodDecListType)->push_back((yyvsp[0].methodDecType));					}
+#line 1658 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 162 "parser.y" /* yacc.c:1646  */
+#line 170 "parser.y" /* yacc.c:1646  */
     {	(yyval.methodDecListType) = (yyvsp[-1].methodDecListType);
-												  	(yyval.methodDecListType)->push_back((yyvsp[0].methodDecType));				}
-#line 1660 "parser.tab.c" /* yacc.c:1646  */
+												  	(yyval.methodDecListType)->push_back((yyvsp[0].methodDecType));					}
+#line 1665 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 166 "parser.y" /* yacc.c:1646  */
-    {	(yyval.methodArgType) = new MethodArgsNode((yyvsp[-1].sval),(yyvsp[0].sval));	}
-#line 1666 "parser.tab.c" /* yacc.c:1646  */
+#line 174 "parser.y" /* yacc.c:1646  */
+    {	(yyval.methodArgType) = new MethodArgsNode((yyvsp[-1].sval),(yyvsp[0].sval));		}
+#line 1671 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 169 "parser.y" /* yacc.c:1646  */
+#line 177 "parser.y" /* yacc.c:1646  */
     { 	(yyval.methodArgsType) = new vector<MethodArgsNode*>;		
-												   	(yyval.methodArgsType)->push_back((yyvsp[0].methodArgType)); 				}
-#line 1673 "parser.tab.c" /* yacc.c:1646  */
+												   	(yyval.methodArgsType)->push_back((yyvsp[0].methodArgType)); 					}
+#line 1678 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 172 "parser.y" /* yacc.c:1646  */
+#line 180 "parser.y" /* yacc.c:1646  */
     { 	(yyval.methodArgsType) = (yyvsp[0].methodArgsType);
-												  	(yyval.methodArgsType)->push_back((yyvsp[-2].methodArgType));				}
-#line 1680 "parser.tab.c" /* yacc.c:1646  */
+												  	(yyval.methodArgsType)->push_back((yyvsp[-2].methodArgType));					}
+#line 1685 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 21:
+#line 184 "parser.y" /* yacc.c:1646  */
+    {}
+#line 1691 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 22:
+#line 185 "parser.y" /* yacc.c:1646  */
+    {}
+#line 1697 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 23:
+#line 186 "parser.y" /* yacc.c:1646  */
+    {}
+#line 1703 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 24:
+#line 187 "parser.y" /* yacc.c:1646  */
+    {}
+#line 1709 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 25:
+#line 190 "parser.y" /* yacc.c:1646  */
+    {	VarDeclNode* temp = new VarDeclNode((yyvsp[-2].sval),(yyvsp[-1].idListType));
+													 	(yyval.varDeclType) = new vector<VarDeclNode*>;
+													 	(yyval.varDeclType)->push_back(temp);						}
+#line 1717 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 26:
+#line 194 "parser.y" /* yacc.c:1646  */
+    {	(yyval.varDeclType) = (yyvsp[0].varDeclType);
+													 	VarDeclNode* temp = new VarDeclNode((yyvsp[-3].sval),(yyvsp[-2].idListType));
+													 	(yyval.varDeclType)->push_back(temp);						}
+#line 1725 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 27:
+#line 199 "parser.y" /* yacc.c:1646  */
+    {	(yyval.idListType) = new vector<Identifier*>;
+														Identifier* temp = new Identifier((yyvsp[0].sval));
+												 		(yyval.idListType)->push_back(temp);					}
+#line 1733 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 28:
+#line 203 "parser.y" /* yacc.c:1646  */
+    {	(yyval.idListType) = (yyvsp[-2].idListType);
+														Identifier* temp = new Identifier((yyvsp[0].sval));
+														(yyval.idListType)->push_back(temp);					}
+#line 1741 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 266 "parser.y" /* yacc.c:1646  */
+#line 285 "parser.y" /* yacc.c:1646  */
     {	(yyval.intlitType) = new IntNode((yyvsp[0].ival));	}
-#line 1686 "parser.tab.c" /* yacc.c:1646  */
+#line 1747 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 267 "parser.y" /* yacc.c:1646  */
+#line 286 "parser.y" /* yacc.c:1646  */
     {	(yyval.intlitType) = new IntNode((yyvsp[0].ival));	}
-#line 1692 "parser.tab.c" /* yacc.c:1646  */
+#line 1753 "parser.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1696 "parser.tab.c" /* yacc.c:1646  */
+#line 1757 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1927,7 +1988,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 274 "parser.y" /* yacc.c:1906  */
+#line 293 "parser.y" /* yacc.c:1906  */
 
 
 int main(int argc, char **argv)

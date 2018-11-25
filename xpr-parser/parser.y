@@ -8,6 +8,7 @@
 
 	extern "C" int yylex();
 	extern "C" int yyparse();
+	extern "C" int yyerror(char *s);
 
 	ProgramNode *strt = NULL;
 
@@ -25,6 +26,7 @@
 {
 	int ival;
 	char* sval;
+	char cval;
 
 	ProgramNode* 		     	prgnodetype;
 
@@ -34,14 +36,37 @@
 	vector<MethodDeclNode*>* 	methodDecListType;
 
 	Identifier*			     	idType;
-	vector<Identifier*>*	 	fieldArgsType;
+	vector<Identifier*>*	 	idListType;
+
 
 	IntNode* 					intlitType;
 	MethodArgsNode* 			methodArgType;
 	vector<MethodArgsNode*>* 	methodArgsType;
 
+
+	VarDeclNode* 				varDeclSingleType;
+	vector<VarDeclNode*>* 		varDeclType;
+
+	LiteralNode*				literalType;
+	BoolNode* 					boollitType;
+
+	MethodCallNode* 			methodcallType;
+	CalloutNode* 				methodcallType;
+
 	BlockNode*					blockType;
+	LocationNode* 				locationType;
+
+	ExpressionNode* 			exprType;
+	vector<ExpressionNode*>* 	argumentsType;
+
+	StringNode* 				stringlitType;
+	CharNode* 					charlitType;
+
+
+	CalloutArgsNode* 			calloutArgsType
+	vector<CalloutArgsNode*>* 	calloutArgsListType;
 };
+
 
 
 %start	classBegin
@@ -58,10 +83,29 @@
 %type 	<methodArgsType> 	methodArgs
 
 %type 	<sval>				type
-%type 	<fieldArgsType> 	fieldArgs
+%type 	<idListType> 		fieldArgs
+
 %type 	<intlitType> 		intlit //to be changed to expression node
+%type 	<boollitType> 		boollit
+%type 	<literalType> 		literal
+
+%type 	<locationType> 		location
+
+%type 	<methodcallType> 	methodcall
+
+%type 	<varDeclType> 		varDecl
+
+%type 	<exprType> 			expr
+%type 	<argumentsType> 	arguments
 
 %type 	<blockType> 		block
+%type 	<idListType> 		blockVars
+
+%type 	<stringlitType> 	stringlit
+%type 	<charlitType> 		charlit
+
+%type 	<calloutArgsListType>	calloutArgsList
+
 
 %token	<sval>	BOOLEAN
 %token	<sval>	BREAK
@@ -79,33 +123,36 @@
 %token	EOL
 %token	<sval>	PROGRAM
 
-%right '=' PLUSEQ MINUSEQ
-%left	AND OR
+%right		<sval> '=' PLUSEQ MINUSEQ
+%left		<sval>	AND OR
 
-%left	EE NE
+%left		<sval>	EE NE
 
-%left	'<' '>' LE GE
+%left		<sval>	'<' '>' LE GE
 	
-%left	'+' '-' 
-%left	'*' '/' '%'
-%nonassoc '!'
+%left		<sval>	'+' '-' 
+%left		<sval>	'*' '/' '%'
+%nonassoc	'!'
 
 	
 
 
 %token 	<sval> STRINGLIT
+%token 	<cval> CHARLIT
 %token	<ival> DECLIT
 %token	<ival> HEXLIT
 %token	<sval> ID
-%token	'!'
-%token 	'('
-%token 	')'
-%token	'[' 
-%token	']'
-%token	'{' 
-%token	'}'
-%token  ','
-%token	';'
+%token	<sval> '!'
+%token 	<sval> '('
+%token 	<sval> ')'
+%token	<sval> '[' 
+%token	<sval> ']'
+%token	<sval> '{' 
+%token	<sval> '}'
+%token  <sval> ','
+%token	<sval> ';'
+%token	<sval> SINGLEQ
+%token	<sval> DOUBLEQ
 
 
 // 
@@ -172,37 +219,48 @@ methodArgs	:	methodArg						{ 	$$ = new vector<MethodArgsNode*>;
 												  	$$->push_back($1);					}
 			;
 
-block		:	'{'  '}'
-			|	'{' varDecl  '}'
-			|	'{' statement '}'
-			|	'{' varDecl statement '}'
+block		:	'{'  '}' 						{ 	$$ = new BlockNode(NULL,NULL);	}
+			|	'{' varDecl  '}'				{	$$ = new BlockNode($2,NULL);	}
+			|	'{' statement '}'				{	$$ = new BlockNode(NULL,$2);	}
+			|	'{' varDecl statement '}'		{	$$ = new BlockNode($2,$3);		}
 			;
 
-varDecl		:	type vars ';' varDecl 
-			|	type vars ';' 
+varDecl		:	type blockVars ';'					{	VarDeclNode* temp = new VarDeclNode($1,$2);
+													 	$$ = new vector<VarDeclNode*>;
+													 	$$->push_back(temp);						} 		
+
+			|	type blockVars ';' varDecl 			{	$$ = $4;
+													 	VarDeclNode* temp = new VarDeclNode($1,$2);
+													 	$$->push_back(temp);						}
 			;
 
-vars		:	vars ',' ID		
-			|	ID 							
-			;
+blockVars		:	ID								{	$$ = new vector<Identifier*>;
+														Identifier* temp = new Identifier($1);
+												 		$$->push_back(temp);					}
+
+				|	blockVars ',' ID 				{	$$ = $1;
+														Identifier* temp = new Identifier($3);
+														$$->push_back(temp);					}																		
+				;
 
 
-statementContents	:	location '=' expr ';'
-					|	location PLUSEQ expr ';'
-					|	location MINUSEQ expr ';'
-					|	methodcall ';'
-					|	IF '(' expr ')' block 
-					|   IF '(' expr ')' block ELSE block
-					|	FOR ID '=' expr ',' expr block
-					|	RETURN ';'
-					| 	RETURN expr ';'
-					| 	BREAK ';'
-					| 	CONTINUE ';'
-					| 	block
+
+statementContents	:	location '=' expr ';'     	{	}		   				
+					|	location PLUSEQ expr ';'				
+					|	location MINUSEQ expr ';'				
+					|	methodcall ';'							
+					|	IF '(' expr ')' block 					
+					|   IF '(' expr ')' block ELSE block 		
+					|	FOR ID '=' expr ',' expr block 				
+					|	RETURN ';'			
+					| 	RETURN expr ';'					
+					| 	BREAK ';'								
+					| 	CONTINUE ';'							
+					| 	block 											
 					;
 
-statement 	:	statementContents
-			|	statement statementContents
+statement 	:	statementContents 				
+			|	statement statementContents  	
 			;
 
 
@@ -211,64 +269,81 @@ type	:	INT
 		;
 
 //expression
-expr	:	location 		
-		|	methodcall 		
-		|	literal 		
-		|	'-' expr 		
-		| 	'!' expr 		
-		|	expr '*' expr 	
-		|	expr '/' expr 	
-		|	expr '%' expr 	
-		|	expr '+' expr 	
-		|	expr '-' expr 	
-		|	expr '<' expr 	
-		|	expr '>' expr 	
-		|	expr LE expr 	
-		|	expr GE expr 	
-		|	expr EE expr 	
-		|	expr NE expr 	
-		|	expr AND expr 	
-		|	expr OR expr 	
-		|	'(' expr ')'	
+expr	:	location 		 		{$$ = new ExpressionNode($1);	   }	
+		|	methodcall 			 	{$$ = new ExpressionNode($1);	   }		
+		|	literal 		   		{$$ = new ExpressionNode($1);	   }
+		|	'-' expr 	 			{$$ = new ExpressionNode($1,$2);   }	
+		| 	'!' expr 				{$$ = new ExpressionNode($1,$2);   }
+		|	expr '*' expr 			{$$ = new ExpressionNode($1,$2,$3);}
+		|	expr '/' expr 			{$$ = new ExpressionNode($1,$2,$3);}
+		|	expr '%' expr 			{$$ = new ExpressionNode($1,$2,$3);}
+		|	expr '+' expr 			{$$ = new ExpressionNode($1,$2,$3);}
+		|	expr '-' expr 			{$$ = new ExpressionNode($1,$2,$3);}
+		|	expr '<' expr 			{$$ = new ExpressionNode($1,$2,$3);}
+		|	expr '>' expr 			{$$ = new ExpressionNode($1,$2,$3);}
+		|	expr LE expr 			{$$ = new ExpressionNode($1,$2,$3);}
+		|	expr GE expr 			{$$ = new ExpressionNode($1,$2,$3);}
+		|	expr EE expr 			{$$ = new ExpressionNode($1,$2,$3);}
+		|	expr NE expr 			{$$ = new ExpressionNode($1,$2,$3);}
+		|	expr AND expr 			{$$ = new ExpressionNode($1,$2,$3);}
+		|	expr OR expr 			{$$ = new ExpressionNode($1,$2,$3);}
+		|	'(' expr ')'			{$$ = new ExpressionNode($2); 	   }
 		;
 
 //location means identifier
-location	:	ID
-			|	ID '[' expr ']'
+location	:	ID  				{$$ = new LocationNode($1);		}
+			|	ID '[' expr ']' 	{$$ = new LocationNode($1,$3);	}
 			;
 
 //method call
-methodname	:	ID
+methodcall	:	ID '(' ')'	 		 	 							{$$ = new MethodCallNode();		}
+			|	ID '(' arguments ')'								{$$ = new MethodCallNode($3);	}
+			|	CALLOUT '(' stringlit ')'	 						{$$ = new CalloutNode($3);		}
+			| 	CALLOUT '(' stringlit ',' calloutArgsList ')'		{$$ = new CalloutNode($3,$5);	} 
 			;
 
-methodcall	:	methodname '(' ')'
-			|	methodname '(' arguments ')'
-			|	CALLOUT '(' stringLiteral ')' 
-			| 	CALLOUT '(' stringLiteral ',' calloutArgsList ')' 
+calloutArgsList	:	stringlit 							{$$ = new vector<CalloutArgsNode*>;
+														 CalloutArgsNode* temp = new CalloutArgsNode($1);
+														 $$->push_back(temp);}	
+
+				|	stringlit ',' calloutArgsList 		{$$ = $3;
+														 $$->push_back($1);}
+
+				| 	expr 						 		{$$ = new vector<CalloutArgsNode*>;
+														 CalloutArgsNode* temp = new CalloutArgsNode($1);
+														 $$->push_back(temp);}	
+
+				| 	expr ',' calloutArgsList 			{$$ = $3;
+														 $$->push_back($1);}										
+				;
+
+
+arguments	:	expr  						{	$$ = new vector<ExpressionNode*>;
+												ExpressionNode* temp = ExpressionNode($1);
+											 	$$->push_back(temp);					}
+
+			|	expr ',' arguments			{	$$ = $1;
+											 	$$->push_back($3);					}
 			;
 
-calloutArgsList	:	expr 
-			|	stringLiteral 
-			|	expr ',' calloutArgsList 
-			|	stringLiteral ',' calloutArgsList 
-			;
-
-stringLiteral 	:	STRINGLIT
-arguments	:	expr
-			|	expr ',' arguments
-			;
-
-literal		:	intlit  
-			| 	boollit
-			;
+literal		:	intlit    			{ $$ = new LiteralNode($1);	}
+			| 	boollit 			{ $$ = new LiteralNode($1);	}
+			|	stringlit           { $$ = new LiteralNode($1);	}
+			|	charlit 		    { $$ = new LiteralNode($1);	}	
+			; 
 
 intlit		:	DECLIT 	{	$$ = new IntNode($1);	}
 			|	HEXLIT 	{	$$ = new IntNode($1);	}
 			;
 
-boollit		:	TRUE
-			|	FALSE
+boollit		:	TRUE 	{	$$ = new BoolNode($1);	}
+			|	FALSE	{ 	$$ = new BoolNode($1);	}
 			;
+
+stringlit 	:	DOUBLEQ	STRINGLIT DOUBLEQ  	{$$ = new StringNode($1);}
+			;
+
+charlit		:	SINGLEQ	CHARLIT SINGLEQ 	{$$ = new CharNode($2);}
 
 %%
 
