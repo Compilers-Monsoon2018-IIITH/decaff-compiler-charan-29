@@ -77,7 +77,8 @@ extern "C" int yyerror(char *s);
 "]"		{char* str = (yytext); yylval.sval = str; return ']';}
 ","		{char* str = (yytext); yylval.sval = str; return ',';}
 ";"		{char* str = (yytext); yylval.sval = str; return ';';}
-
+'\"' 	{char* str = (yytext); yylval.sval = str; return DOUBLEQ;}
+'\'' 	{char* str = (yytext); yylval.sval = str; return SINGLEQ;}
 
 [0-9][0-9]* 					{yylval.ival = atoi(yytext); 	return DECLIT;}
 "0x"[0-9a-fA-F][0-9a-fA-F]*		{yylval.ival = atoi(yytext); 	return HEXLIT;}

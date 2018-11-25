@@ -1,7 +1,16 @@
 class Program{
+	
+	int a[100];
+
 	void main()
 	{
-		int k,ld, lds; int l,d,ld,ad;
-		foo();
+		
+		a += a+b;
+		a-= a+564654;
+
+		b = a+2135453;
+
+		foo(blah(),a%f);
 	}
+
 }

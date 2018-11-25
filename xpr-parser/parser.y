@@ -50,24 +50,27 @@
 	LiteralNode*				literalType;
 	BoolNode* 					boollitType;
 
-	MethodCallNode* 			methodcallType;
-	CalloutNode* 				methodcallType;
+	MethodNode* 			methodcallType;
+
 
 	BlockNode*					blockType;
 	LocationNode* 				locationType;
+
+	UnaryNode* 					unrType;
+	BinaryNode* 				bnrType;
 
 	ExpressionNode* 			exprType;
 	vector<ExpressionNode*>* 	argumentsType;
 
 	StringNode* 				stringlitType;
+	CharNode* 					charlitType;
 
 
-
-	CalloutArgsNode* 			calloutArgsType
+	CalloutArgsNode* 			calloutArgsType;
 	vector<CalloutArgsNode*>* 	calloutArgsListType;
 
 	StatementNode* 				statementContentsType;
-	vector<StatementNode*> 		statementType;
+	vector<StatementNode*>*		statementType;
 };
 
 
@@ -105,12 +108,14 @@
 %type 	<idListType> 		blockVars
 
 %type 	<stringlitType> 	stringlit
-
+%type 	<charlitType>		charlit
 
 %type 	<calloutArgsListType>	calloutArgsList
 
 %type 	<statementContentsType> statementContents
 %type 	<statementType> 		statement	
+
+%type 	<sval> 	methodname
 
 %token	<sval>	BOOLEAN
 %token	<sval>	BREAK
@@ -141,6 +146,8 @@
 
 	
 
+%token	DOUBLEQ
+%token	SINGLEQ
 
 %token 	<sval> STRINGLIT
 %token 	<cval> CHARLIT
@@ -264,11 +271,14 @@ statementContents	:	location '=' expr ';'     	{	$$ = new AssignmentNode($1,$2,$
 					;
 
 statement 	:	statementContents 			      { $$ = new vector<StatementNode*>;
-													StatementNode* temp = new StatementNode($1);
+													StatementNode* temp = new StatementNode();
+													temp=$1;
 													$$->push_back(temp);	}	
 
-			|	statement statementContents  	  {	$$ = $1;
-													StatementNode* temp = new StatementNode($2);
+			|	statement statementContents  	  {	
+													StatementNode* temp = new StatementNode();
+													temp = $2;
+													$$ = $1;
 													$$->push_back(temp);	}
 			;
 
@@ -278,25 +288,25 @@ type	:	INT
 		;
 
 //expression
-expr	:	location 		 		{$$ = new ExpressionNode($1);	   }	
-		|	methodcall 			 	{$$ = new ExpressionNode($1);	   }		
-		|	literal 		   		{$$ = new ExpressionNode($1);	   }
-		|	'-' expr 	 			{$$ = new ExpressionNode($1,$2);   }	
-		| 	'!' expr 				{$$ = new ExpressionNode($1,$2);   }
-		|	expr '*' expr 			{$$ = new ExpressionNode($1,$2,$3);}
-		|	expr '/' expr 			{$$ = new ExpressionNode($1,$2,$3);}
-		|	expr '%' expr 			{$$ = new ExpressionNode($1,$2,$3);}
-		|	expr '+' expr 			{$$ = new ExpressionNode($1,$2,$3);}
-		|	expr '-' expr 			{$$ = new ExpressionNode($1,$2,$3);}
-		|	expr '<' expr 			{$$ = new ExpressionNode($1,$2,$3);}
-		|	expr '>' expr 			{$$ = new ExpressionNode($1,$2,$3);}
-		|	expr LE expr 			{$$ = new ExpressionNode($1,$2,$3);}
-		|	expr GE expr 			{$$ = new ExpressionNode($1,$2,$3);}
-		|	expr EE expr 			{$$ = new ExpressionNode($1,$2,$3);}
-		|	expr NE expr 			{$$ = new ExpressionNode($1,$2,$3);}
-		|	expr AND expr 			{$$ = new ExpressionNode($1,$2,$3);}
-		|	expr OR expr 			{$$ = new ExpressionNode($1,$2,$3);}
-		|	'(' expr ')'			{$$ = new ExpressionNode($2); 	   }
+expr	:	location 		 		{$$ = new LocationNode(); $$=$1;	   }	
+		|	methodcall 			 	{$$ = new MethodNode();	 $$=$1;  }		
+		|	literal 		   		{$$ = new LiteralNode(); $$ = $1;	   }
+		|	'-' expr 	 			{$$ = new UnaryNode($1,$2);   }	
+		| 	'!' expr 				{$$ = new UnaryNode($1,$2);   }
+		|	expr '*' expr 			{$$ = new BinaryNode($1,$2,$3);}
+		|	expr '/' expr 			{$$ = new BinaryNode($1,$2,$3);}
+		|	expr '%' expr 			{$$ = new BinaryNode($1,$2,$3);}
+		|	expr '+' expr 			{$$ = new BinaryNode($1,$2,$3);}
+		|	expr '-' expr 			{$$ = new BinaryNode($1,$2,$3);}
+		|	expr '<' expr 			{$$ = new BinaryNode($1,$2,$3);}
+		|	expr '>' expr 			{$$ = new BinaryNode($1,$2,$3);}
+		|	expr LE expr 			{$$ = new BinaryNode($1,$2,$3);}
+		|	expr GE expr 			{$$ = new BinaryNode($1,$2,$3);}
+		|	expr EE expr 			{$$ = new BinaryNode($1,$2,$3);}
+		|	expr NE expr 			{$$ = new BinaryNode($1,$2,$3);}
+		|	expr AND expr 			{$$ = new BinaryNode($1,$2,$3);}
+		|	expr OR expr 			{$$ = new BinaryNode($1,$2,$3);}
+		|	'(' expr ')'			{$$ = new ExpressionNode(); $$ = $2;}
 		;
 
 //location means identifier
@@ -308,41 +318,52 @@ location	:	ID  				{$$ = new LocationNode($1);		}
 methodname	:	ID 					
 			;
 //method call
-methodcall	:	methodname '(' ')'	 		 	 							{$$ = new MethodCallNode();		}
-			|	methodname '(' arguments ')'								{$$ = new MethodCallNode($3);	}
+methodcall	:	methodname '(' ')'	 		 	 							{$$ = new MethodCallNode($1,NULL);		}
+			|	methodname '(' arguments ')'								{$$ = new MethodCallNode($1,$3);	}
 			|	CALLOUT '(' stringlit ',' calloutArgsList ')'	 			{$$ = new CalloutNode($3,$5);		}
-			| 	CALLOUT '(' stringlit ')'									{$$ = new CalloutNode($3);	} 
+			| 	CALLOUT '(' stringlit ')'									{$$ = new CalloutNode($3,NULL);	} 
 			;
 
 calloutArgsList	:	 	expr 						 	{$$ = new vector<CalloutArgsNode*>;
-														 CalloutArgsNode* temp = new CalloutArgsNode($1);
+														 CalloutArgsNode* temp = new CalloutArgsNode();
+														 temp = $1;
 														 $$->push_back(temp);}	
 
 				|	stringlit 							{$$ = new vector<CalloutArgsNode*>;
-														 CalloutArgsNode* temp = new CalloutArgsNode($1);
+														 CalloutArgsNode* temp = new CalloutArgsNode();
+														 temp = $1;
 														 $$->push_back(temp);}	
 
 				| 	expr ',' calloutArgsList 			{$$ = $3;
-														 $$->push_back($1);}		
+														CalloutArgsNode* temp = new CalloutArgsNode();
+														temp=$1;
+														 $$->push_back(temp);}		
 
 
 				|	stringlit ',' calloutArgsList 		{$$ = $3;
-														 $$->push_back($1);}
+														CalloutArgsNode* temp = new CalloutArgsNode();
+														temp=$1;
+														 $$->push_back(temp);}
 
 												
 				;
 
 
+
 arguments	:	expr  						{	$$ = new vector<ExpressionNode*>;
-												ExpressionNode* temp = ExpressionNode($1);
+												ExpressionNode* temp = new ExpressionNode();
+												temp = $1;
 											 	$$->push_back(temp);					}
 
-			|	expr ',' arguments			{	$$ = $1;
-											 	$$->push_back($3);					}
+			|	expr ',' arguments			{	$$ = $3;
+												ExpressionNode* temp = new ExpressionNode();
+												temp = $1;
+											 	$$->push_back(temp);					}
 			;
 
-literal		:	intlit    			{ $$ = new LiteralNode($1);	}
-			| 	boollit 			{ $$ = new LiteralNode($1);	}
+literal		:	intlit    			{ $$ = new LiteralNode(); $$=$1;	}
+			| 	boollit 			{ $$ = new LiteralNode(); $$=$1;	}
+			|	charlit 			{ $$ = new LiteralNode(); $$=$1;	}
 			; 
 
 intlit		:	DECLIT 	{	$$ = new IntNode($1);	}
@@ -353,10 +374,11 @@ boollit		:	TRUE 	{	$$ = new BoolNode($1);	}
 			|	FALSE	{ 	$$ = new BoolNode($1);	}
 			;
 
-stringlit 	:	STRINGLIT 	{$$ = new StringNode($1);}
+stringlit 	:	DOUBLEQ	STRINGLIT DOUBLEQ			{$$ = new StringNode($2);}
 			;
 
-
+charlit 	:	SINGLEQ	CHARLIT SINGLEQ				{$$ = new CharNode($2);}
+			;
 
 
 %%
