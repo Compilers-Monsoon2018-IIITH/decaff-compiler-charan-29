@@ -2,15 +2,30 @@ class Program{
 	
 	int a[100];
 
-	void main()
+	boolean main()
 	{
 		
-		a += a+b;
-		a-= a+564654;
+		for i = 1,14
+		{
+			int i,k,l;
+			if(x>2)
+			{
+				sthe();
+				
+			}
+			else
+			{
 
-		b = a+2135453;
+				continue;
+				{
+				
+				}
+				//should give error.
+				return (a+b)
+			}
+			foo();
+		}
 
-		foo(blah(),a%f);
 	}
 
 }
