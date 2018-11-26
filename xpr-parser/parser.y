@@ -12,6 +12,9 @@
 
 	ProgramNode *strt = NULL;
 
+  	class IRfactory* irf = new IRfactory();
+  	extern Module *module;
+
 	extern FILE *yyin;
 	#define YYDEBUG 1
 
@@ -397,6 +400,17 @@ int main(int argc, char **argv)
 
 	yyin = myfile;
 	yyparse();
+
+
+
+	if(strt)
+	{
+		strt->accept(irf);
+	}
+	module->dump();
+
+
+
 	return 0;
 }
 

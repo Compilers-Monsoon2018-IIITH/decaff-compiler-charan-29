@@ -1,7 +1,14 @@
-#include <cstdlib>
-#include <iostream>
-#include <bits/stdc++.h>
+#include	"llvm/IR/IRBuilder.h"
+#include	"llvm/IR/LLVMContext.h"
+#include	"llvm/IR/Module.h"
+#include	"llvm/IR/Verifier.h"
+
+#include 	<cstdlib>
+#include 	<iostream>
+#include 	<bits/stdc++.h>
+
 using namespace std;
+using namespace llvm;
 
 
 class Identifier;
@@ -33,29 +40,16 @@ class CharNode;
 class BoolNode;
 
 
+class IRfactory
+{
+public:
+	IRfactory(){}
+
+	Value* visit(ProgramNode*);
+	Value* visit(FieldDeclNode*);
+};
 
 
 
 
 
-
-
-// class visitor
-// {
-// public:
-// 	virtual 	int visit(ProgramNode*)=0;
-// 	virtual 	int visit(IntLiteralNode*)=0;
-// 	virtual	 	int visit(Identifier*)=0;
-// 	virtual 	int visit(FieldDeclNode*)=0;
-// 	virtual 	int visit(MethodDeclNode*)=0; 
-
-// };
-
-// class ASTvisitor : public visitor
-// {
-// 	int visit(ProgramNode*);
-// 	int visit(IntLiteralNode*);
-// 	int visit(Identifier*);
-// 	int visit(FieldDeclNode*);
-// 	int visit(MethodDeclNode*);
-// };
