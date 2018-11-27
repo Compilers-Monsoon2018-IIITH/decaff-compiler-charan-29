@@ -4,7 +4,8 @@
 	#include <bits/stdc++.h>
 	using namespace std;
 
-	#include "ast.h"
+	// #include "ast.h"
+	#include "visitable_nodes.h"
 
 	extern "C" int yylex();
 	extern "C" int yyparse();
@@ -401,23 +402,10 @@ int main(int argc, char **argv)
 	yyin = myfile;
 	yyparse();
 
-
-
 	if(strt)
 	{
 		strt->accept(irf);
 	}
 	module->dump();
-
-
-
 	return 0;
 }
-
-
-
-
-
-
-//callout (string lit)
-//comments
