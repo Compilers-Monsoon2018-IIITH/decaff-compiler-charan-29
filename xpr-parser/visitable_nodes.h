@@ -146,6 +146,11 @@ class VarDeclNode
 		this->type = type;
 		this->blockVars = blockVars;
 	}
+
+	Value *accept(IRfactory *irf)
+	{
+		return irf->visit(this);
+	}
 };
 
 class StatementNode
@@ -168,6 +173,10 @@ class BlockNode : public StatementNode
 		this->varDecl = varDecl;
 		this->statement = statement;
 	}
+	Value* accept(IRfactory *irf)
+	{
+		return irf->visit(this);
+	}
 };
 
 // int funcName ( arguments ) {//block}
@@ -178,8 +187,8 @@ class MethodDeclNode
 		char *returnType;
 		char *methodName;
 
-		std::vector<MethodArgsNode *> *argsList;
-		BlockNode *block;
+		std::vector<MethodArgsNode *>* argsList;
+		BlockNode* block;
 
 		MethodDeclNode(char *returnType, char *methodName, std::vector<MethodArgsNode *> *argsList, BlockNode *block)
 		{
@@ -189,7 +198,7 @@ class MethodDeclNode
 			this->block = block;
 		}
 
-		Value *accept(IRfactory *irf)
+		Value* accept(IRfactory *irf)
 		{
 			return irf->visit(this);
 		}

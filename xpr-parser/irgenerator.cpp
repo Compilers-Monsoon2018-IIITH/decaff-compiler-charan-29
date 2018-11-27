@@ -175,8 +175,8 @@ Function*   IRfactory::visit(MethodDeclNode* mdnode)
     BasicBlock *basicbloc = BasicBlock::Create(getGlobalContext(), "entry", func);
     Builder.SetInsertPoint(basicbloc);
 
-    Value* irBlockReturn;// = irf->visit(mdnode->block);
-    if(irBlockReturn)
+    Value* irBlockReturn = irf->visit(mdnode->block);
+    // if(irBlockReturn)
     {
         Builder.CreateRet(irBlockReturn);
         verifyFunction(*func);
@@ -185,41 +185,63 @@ Function*   IRfactory::visit(MethodDeclNode* mdnode)
     }
 
     //it means empty bloc
-    func->eraseFromParent();
+    // func->eraseFromParent();
     return 0;
 }
 
-// Value *GenerateIR::codeGen(ASTBlock *node)
-// {
-//     if (node->block_idenlist)
-//     {
-//         printit("codeGen-block-Identifiers");
 
-//         if (node->block_idenlist)
-//         {
-//             vector<ASTBlockVarDecl *> temp = *(node->block_idenlist);
-//             for (int i = 0; i < temp.size(); ++i)
-//             {
-//                 g->codeGen(temp[i]);
-//             }
-//         }
+//! BlockNode
+Value *IRfactory::visit(BlockNode *bnode)
+{
+    if(bnode->varDecl!=NULL)
+    {
+        vector<VarDeclNode*> temp = *(bnode->varDecl);
+        for(int i=0;i<temp.size();i++)
+        {
+            irf->visit(temp[i]);
+        }
+    }
 
-//         printit("Completed-codeGen-block-Identifiers");
-//     }
-//     if (node->stmts)
-//     {
-//         if (node->stmts)
-//         {
-//             printit("codeGen-Statements");
-//             vector<ASTStatements *> temp = *(node->stmts);
-//             for (int i = 0; i < temp.size(); ++i)
-//             {
-//                 g->codeGen(temp[i]);
-//             }
-//         }
+    // if(bnode->statement)
+    // {
+    //     vector<StatementNode*> temp = *(statement);
+    //     for(int i=0;i<temp.size();i++)
+    //     {
+    //         irf->visit(temp[i]);
+    //     }
+    // }
+    Value *V = ConstantInt::get(getGlobalContext(), APInt(32, 1));
+    return V;
+}
 
-//         printit("Completed-codeGen-Statements");
-//     }
 
-//     return 1;
-// }
+//! VarDeclNode
+
+Value* IRfactory::visit(VarDeclNode* vdnode)
+{
+    Type* type;
+    Value* v;
+
+    if(vdnode->blockVars!=NULL)
+    {
+        string dtype(vdnode->type);
+    }
+
+    Value *V = ConstantInt::get(getGlobalContext(), APInt(32, 1));
+
+    return V;
+    //   public:
+    //     char *type;
+    //     vector<Identifier *> *blockVars;
+    //     VarDeclNode(char *type, vector<Identifier *> *blockVars)
+    //     {
+    //         this->type = type;
+    //         this->blockVars = blockVars;
+    //     }
+
+    //     Value *accept(IRfactory * irf)
+    //     {
+    //         return irf->visit(this);
+    //     }
+}
+
