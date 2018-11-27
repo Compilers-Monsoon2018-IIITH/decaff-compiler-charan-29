@@ -46,22 +46,24 @@ class Identifier
 };
 
 // int a, b, c;
+//!
 class FieldDeclNode
 {
-  public:
-	std::vector<Identifier *> *idList;
-	char *dataType;
+  	public:
+		std::vector<Identifier *> *idList;
+		char *dataType;
 
-	FieldDeclNode(char *dataType, std::vector<Identifier *> *idList)
-	{
-		this->dataType = dataType;
-		this->idList = idList;
-	}
+		FieldDeclNode(char *dataType, std::vector<Identifier *> *idList)
+		{
+			
+			this->dataType = dataType;
+			this->idList = idList;
+		}
 
-	Value *accept(IRfactory *irf)
-	{
-		return irf->visit(this);
-	}
+		Value *accept(IRfactory *irf)
+		{
+			return irf->visit(this);
+		}
 };
 
 class CalloutArgsNode
@@ -172,20 +174,25 @@ class BlockNode : public StatementNode
 class MethodDeclNode
 {
 
-  public:
-	char *returnType;
-	char *methodName;
+	public:
+		char *returnType;
+		char *methodName;
 
-	std::vector<MethodArgsNode *> *argsList;
-	BlockNode *block;
+		std::vector<MethodArgsNode *> *argsList;
+		BlockNode *block;
 
-	MethodDeclNode(char *returnType, char *methodName, std::vector<MethodArgsNode *> *argsList, BlockNode *block)
-	{
-		this->returnType = returnType;
-		this->methodName = methodName;
-		this->argsList = argsList;
-		this->block = block;
-	}
+		MethodDeclNode(char *returnType, char *methodName, std::vector<MethodArgsNode *> *argsList, BlockNode *block)
+		{
+			this->returnType = returnType;
+			this->methodName = methodName;
+			this->argsList = argsList;
+			this->block = block;
+		}
+
+		Value *accept(IRfactory *irf)
+		{
+			return irf->visit(this);
+		}
 };
 
 class ProgramNode
