@@ -1,10 +1,6 @@
 %{
-	#include <stdio.h>
-	#include <stdlib.h>
 	#include <bits/stdc++.h>
 	using namespace std;
-
-	// #include "ast.h"
 	#include "visitable_nodes.h"
 
 	extern "C" int yylex();
@@ -188,6 +184,7 @@ classBegin	:	CLASS PROGRAM '{' '}'							{	strt = new ProgramNode(NULL,NULL);	}
 
 fieldDec	:	type fieldArgs ';'							{	$$ = new vector<FieldDeclNode*>;
 																$$->push_back(new FieldDeclNode($1,$2));	}
+
 			|	fieldDec type fieldArgs ';' 				{	$$ = $1;
 																$$->push_back(new FieldDeclNode($2,$3));	}																								
 			;
@@ -216,7 +213,9 @@ methodDec	:		type ID '(' methodArgs ')' block 	{	$$ = new MethodDeclNode($1,$2,$
 				|	type ID '('  ')' block				{	$$ = new MethodDeclNode($1,$2,NULL,$5);	}	
 				| 	VOID ID '(' methodArgs ')' block	{	$$ = new MethodDeclNode($1,$2,$4,$6);	}			
 				|	VOID ID '('  ')' block				{	$$ = new MethodDeclNode($1,$2,NULL,$5);	}	
+				;
 
+				
 methodDecList 	:	methodDec					{	$$ = new vector<MethodDeclNode*>;
 												 	$$->push_back($1);					}
 
@@ -406,6 +405,5 @@ int main(int argc, char **argv)
 	{
 		strt->accept(irf);
 	}
-	module->dump();
 	return 0;
 }

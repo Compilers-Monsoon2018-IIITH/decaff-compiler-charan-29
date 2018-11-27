@@ -48,6 +48,7 @@ public:
 	Value* visit(ProgramNode*);
 	Value* visit(FieldDeclNode*);
 	Value* visit(char*,Identifier*);
+	Function* visit(MethodDeclNode*);
 };
 
 
